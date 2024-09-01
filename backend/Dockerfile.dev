@@ -1,18 +1,43 @@
-FROM ruby:3.2.3
+# ビルドステージ
+FROM ruby:3.2.3-slim AS builder
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
 
-# Install essential Linux packages
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev vim
+# 必要なパッケージのインストール
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends build-essential libpq-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Set working directory
+# 作業ディレクトリの設定
 WORKDIR /app
 
-# Install bundler
+# bundler のインストール
 RUN gem install bundler
 
-# Copy Gemfile and install dependencies
+# Gemfile のコピーと依存関係のインストール
 COPY Gemfile Gemfile.lock ./
-RUN bundle install
+RUN bundle install --without development test
 
+# 実行ステージ
+FROM ruby:3.2.3-slim
+ENV LANG C.UTF-8
+ENV TZ Asia/Tokyo
+
+# 必要な実行時パッケージのインストール
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends libpq-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# 作業ディレクトリの設定
+WORKDIR /app
+
+# ビルドステージからの Gem のコピー
+COPY --from=builder /usr/local/bundle /usr/local/bundle
+
+# アプリケーションコードのコピー
 COPY . .
+
+# 実行コマンド
+CMD ["rails", "server", "-b", "0.0.0.0"]

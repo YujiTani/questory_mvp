@@ -1,22 +1,27 @@
-FROM node:lts
-
+# ベースイメージ
+FROM node:lts-alpine AS base
 WORKDIR /app
 
-# Copy package.json and package-lock.json before other files
-# Utilise Docker cache to save re-installing dependencies if unchanged
+# 依存関係のインストール
+FROM base AS deps
 COPY package*.json ./
+RUN npm ci
 
-# Install dependencies
-RUN npm install
-
-# Copy all files
+# ビルダーステージ
+FROM base AS builder
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Build app
 RUN npm run build
 
-# Expose the listening port
-EXPOSE 3000
+# 実行ステージ
+FROM base AS runner
+ENV NODE_ENV production
+WORKDIR /app
 
-# Run npm start script when container starts
-CMD ["npm", "run", "dev"]
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+# 実行コマンド
+EXPOSE 3000
+CMD ["node", "server.js"]
