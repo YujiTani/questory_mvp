@@ -1,0 +1,26 @@
+# macOS システムファイル
+.DS_Store
+
+# Rails
+/log
+/tmp
+/db/*.sqlite3
+/public/system
+/coverage/
+/spec/tmp
+*.orig
+rerun.txt
+pickle-email-*.html
+
+# Node
+/frontend/node_modules
+/frontend/.next
+/frontend/.pnp
+/frontend/.pnp.js
+
+# Docker
+docker-compose.override.yml
+
+# その他
+.env
+.env.*
