@@ -14,9 +14,6 @@ pickle-email-*.html
 
 # Node
 /frontend/node_modules
-/frontend/.next
-/frontend/.pnp
-/frontend/.pnp.js
 
 # Docker
 docker-compose.override.yml
