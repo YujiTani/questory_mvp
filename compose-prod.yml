@@ -18,10 +18,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
-      platforms:
-       - linux/amd64
-       - linux/arm64
-       - linux/x86_64
     image: ${DOCKER_USERNAME}/${BACKEND_REPOSITORY}:${VERSION}
     command: bash -c "bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0 -p 3000"
     environment:
@@ -39,14 +35,10 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      platforms:
-       - linux/amd64
-       - linux/arm64
-       - linux/x86_64
     image: ${DOCKER_USERNAME}/${FRONTEND_REPOSITORY}:${VERSION}
     environment:
       NODE_ENV: production
-    command: npm start
+    command: node server.js
 
   nginx:
     image: nginx:stable

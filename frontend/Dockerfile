@@ -1,27 +1,36 @@
 # ベースイメージ
-FROM node:lts-alpine AS base
+FROM node:20-alpine AS base
 WORKDIR /app
 
 # 依存関係のインストール
 FROM base AS deps
-COPY package*.json ./
-RUN npm ci
+RUN apk add --no-cache libc6-compat
+COPY package.json package-lock.json ./
+RUN npm install
 
 # ビルダーステージ
 FROM base AS builder
+WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build
 
 # 実行ステージ
 FROM base AS runner
-ENV NODE_ENV production
 WORKDIR /app
+ENV NODE_ENV production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# 実行コマンド
+USER nextjs
+
 EXPOSE 3000
+ENV PORT 3000
+
 CMD ["node", "server.js"]
