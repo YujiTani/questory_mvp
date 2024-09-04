@@ -44,7 +44,6 @@ RUN bundle exec bootsnap precompile app/ lib/
 
 
 
-
 # Final stage for app image
 FROM base
 
