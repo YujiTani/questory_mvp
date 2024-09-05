@@ -17,7 +17,7 @@ RUN gem install bundler
 
 # Gemfile のコピーと依存関係のインストール
 COPY Gemfile Gemfile.lock ./
-RUN bundle install --without development test
+RUN bundle install
 
 # 実行ステージ
 FROM ruby:3.2.3-slim

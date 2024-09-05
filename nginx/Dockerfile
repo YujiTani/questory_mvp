@@ -3,7 +3,10 @@ FROM nginx:1.21
 WORKDIR /etc/nginx
 
 COPY nginx.conf ./
-COPY ssl ./
+COPY ssl ./ssl
+
+RUN ls -la
+RUN chmod 644 ssl/nginx-selfsigned.crt && chmod 600 ssl/nginx-selfsigned.key
 
 EXPOSE 80 443
 
