@@ -20,7 +20,6 @@ docker-compose.override.yml
 
 # その他
 .env
-.env.*
 
 # SSL
 ssl/*.key
