@@ -10,6 +10,8 @@ docker compose up -d --build
 
 ```
 
+---
+
 ## 本番環境へのデプロイ
 
 ### 1. 本番環境変数用意
@@ -65,3 +67,16 @@ docker compose -f compose-prod.yml pull frontend or backend
 ```
 docker compose -f compose-prod.yml up -d frontend or backend
 ```
+
+---
+## ライブラリの追加
+cleanな一時コンテナを使用した追加方法を記述
+
+```
+# Ruby on Rails Gemの追加
+docker compose run --rm backend gem install  {追加したいgem名}
+
+# JavaScriptライブラリの追加
+docker compose run --rm frontend yarn add {追加したいライブラリ名}
+```
+
