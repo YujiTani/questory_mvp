@@ -1,5 +1,5 @@
 module Api
-  class HomeController < ApplicationController
+  class HomeController < BaseController
     def index
       render json: { message: "Welcome to the API!" }
     end
