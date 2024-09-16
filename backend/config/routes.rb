@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   # apiの基本rootは /api/v1
   namespace :api do
     namespace :v1 do
-      route to: 'home#index'
+      root to: 'home#index'
 
       resources :quests, param: :uuid, except: %i[new show] do
         delete :trashed
