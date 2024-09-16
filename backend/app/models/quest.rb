@@ -25,20 +25,12 @@ class Quest < ApplicationRecord
   }
 
   validates :uuid, presence: true, uniqueness: true
-  validates :name, presence: true, length: { maximum: 60 }
-  validates :description, presence: true, length: { maximum: 1000 }
+  validates :name, length: { maximum: 60 }, allow_nil: true
+  validates :description, length: { maximum: 1000 }, allow_nil: true
   validates :state, presence: true, inclusion: { in: states.keys }
 
   # create メソッドや save メソッドでオブジェクトが初めてデータベースに保存される前に、実行される
   before_create :set_default_values
-
-  private
-
-  # デフォルト値設定メソッド
-  def set_default_values
-    self.uuid = SecureRandom.uuid
-    self.state ||= 0
-  end
 
   # 論理削除
   def soft_delete
@@ -56,4 +48,13 @@ class Quest < ApplicationRecord
   scope :with_deleted, -> { unscope(where: :deleted_at) }
   # 削除されたレコードのみ取得
   scope :only_deleted, -> { with_deleted.where.not(deleted_at: nil) }
+
+  private
+
+  # デフォルト値設定メソッド
+  def set_default_values
+    self.uuid = SecureRandom.uuid
+    self.state ||= 0
+  end
+
 end
