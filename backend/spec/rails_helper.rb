@@ -36,7 +36,7 @@ end
 RSpec.configure do |config|
   # 環境変数の設定（必要に応じて）
   ENV["BASIC_AUTH_USER"] ||= "quest0ry"
-  ENV["BASIC_AUTH_PASSWORD"] ||= "quest0ry"
+  ENV["BASIC_AUTH_PASSWORD"] ||= "p@ssw0rd"
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [
@@ -64,12 +64,11 @@ RSpec.configure do |config|
   #
   # The different available types are documented in the features, such as in
   # https://rspec.info/features/7-0/rspec-rails
+  # ファイルの場所からテストタイプを推測
   config.infer_spec_type_from_file_location!
-
-  # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
-  # arbitrary gems may also be filtered via:
-  # config.filter_gems_from_backtrace("gem name")
+  # FactoryBot のシンタックスメソッドをインクルード
   config.include FactoryBot::Syntax::Methods
-  config.include LoginMacros, type: %w[controller request system]
+  # LoginMacros を特定のタイプに対してインクルード
+  config.include LoginMacros, type: %w[controller request ]
 end

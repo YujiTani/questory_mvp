@@ -8,19 +8,15 @@ RSpec.describe "Basic認証", type: :request do
   let(:access_url) { "/api/v1" }
 
   context "認証情報が正しくリクエストが成功する" do
-    before { basic_auth(valid_user, valid_password) }
-
     it "リクエストが成功する" do
-      get access_url
+      get access_url, headers: basic_auth_headers(valid_user, valid_password)
       expect(response).to have_http_status(:ok)
     end
   end
 
   context "認証情報が不正でリクエストが拒否される" do
-    before { basic_auth("wrong_user", "wrong_password") }
-
     it "リクエストが拒否される" do
-      get access_url
+      get access_url, headers: basic_auth_headers("wrong_user", "wrong_password")
       expect(response).to have_http_status(:unauthorized)
     end
   end
