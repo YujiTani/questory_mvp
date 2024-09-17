@@ -1,4 +1,4 @@
-class QuestsController < BaseController
+class Api::V1::QuestsController < Api::V1::BaseController
   def index
     quests = Quest.all.without_deleted
     total = Quest.all_count
