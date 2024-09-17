@@ -15,6 +15,16 @@ class Api::V1::QuestsController < Api::V1::BaseController
       offset: offset,
       has_more: quests.has_more?(offset)
     }
+
+  rescue => e
+    logger.error "Error in QuestsController#index: #{e.message}"
+    render json: {
+      ok: false,
+      request_id: SecureRandom.uuid,
+      code: "InternalServerError",
+      message: "エラーの詳細メッセージ",
+      errors: e.message
+    }, status: :internal_server_error
   end
 
   def create
