@@ -24,13 +24,14 @@ class Quest < ApplicationRecord
     archived: 2,
   }
 
+  before_validation :set_default_values, on: :create
+
   validates :uuid, presence: true, uniqueness: true
   validates :name, length: { maximum: 60 }, allow_nil: true
   validates :description, length: { maximum: 1000 }, allow_nil: true
   validates :state, presence: true, inclusion: { in: states.keys }
 
   # create メソッドや save メソッドでオブジェクトが初めてデータベースに保存される前に、実行される
-  before_create :set_default_values
 
   # 論理削除
   def soft_delete
