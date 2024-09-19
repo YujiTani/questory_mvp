@@ -1,81 +1,49 @@
 class Api::V1::QuestsController < Api::V1::BaseController
-  # すべてのメソッドであらかじめresponse_idを生成する
-  before_action :set_response_id, only: [:index, :create, :update, :destroy, :trashed]
+  before_action :set_quest_by_uuid, only: [:update, :destroy, :trashed]
 
   def index
     all_quests = Quest.all.without_deleted
-    # limit,offsetを受け取った場合はその値を使用する
     limit = params[:limit] || 50
     offset = params[:offset] || 0
 
     # limit, offsetを使って、questsを絞り込む
-    quests = all_quests.limit(limit).offset(offset)
+    @quests = all_quests.limit(limit).offset(offset)
 
     render json: {
       ok: true,
       response_id: @response_id,
-      quests: quests,
+      quests: @quests,
       total: all_quests.count,
       limit: limit,
       offset: offset,
     }, status: :ok
-
-  rescue => e
-    logger.error "Error in QuestsController#index: #{e.message}"
-    render json: {
-      ok: false,
-      response_id: @response_id,
-      code: "InternalServerError",
-      message: "エラーの詳細メッセージ",
-      errors: e.message
-    }, status: :internal_server_error
   end
 
   def create
-    quest = Quest.new(quest_params)
+    @quest = Quest.new(quest_params)
 
-    if quest.save
+    if @quest.save!
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: quest
+        quest: @quest
       }, status: :ok
-    else
-      render json: {
-        ok: false,
-        response_id: @response_id,
-        code: "ParameterError",
-        message: "パラメーターエラー （必須パラメーターを渡さなかった・パラメーターのデータ型を間違えた等）",
-        errors: quest.errors.full_messages
-      }, status: :bad_request
     end
   end
 
 
   def update
-    quest = Quest.find_by(id: quest_params[:id])
-
-    if quest.update(quest_params)
+    if @quest.update!(quest_params)
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: quest
-      }
-    else
-      render json: {
-        ok: false,
-        response_id: @response_id,
-        code: "NotFound",
-        message: "エラーの詳細メッセージ",
-        errors: quest.errors
-      }
+        quest: @quest
+      }, status: :ok
     end
   end
 
   def destroy
-    quest = Quest.find_by(id: quest_params[:id])
-
-    if quest.soft_delete
+    if @quest.soft_delete
       render json: {
         ok: true,
         response_id: @response_id,
@@ -86,15 +54,13 @@ class Api::V1::QuestsController < Api::V1::BaseController
         response_id: @response_id,
         code: "NotFound",
         message: "エラーの詳細メッセージ",
-        errors: quest.errors
+        errors: @quest.errors
       }
     end
   end
 
   def trashed
-    quest = Quest.find_by(id: quest_params[:id])
-
-    if quest.destroy
+    if @quest.destroy
       render json: {
         ok: true,
         response_id: @response_id,
@@ -105,18 +71,27 @@ class Api::V1::QuestsController < Api::V1::BaseController
         response_id: @response_id,
         code: "NotFound",
         message: "エラーの詳細メッセージ",
-        errors: quest.errors
+        errors: @quest.errors
       }
     end
   end
 
   private
 
-  def quest_params
-    params.require(:quest).permit(:name, :description, :state)
+  def set_quest_by_uuid
+    @quest = Quest.find_by(uuid: params[:uuid])
+
+    if @quest.nil?
+      render json: {
+        ok: false,
+        response_id: @response_id,
+        code: "NotFound",
+        message: "クエストが見つかりませんでした",
+      }, status: :not_found
+    end
   end
 
-  def set_response_id
-    @response_id = SecureRandom.uuid
+  def quest_params
+    params.require(:quest).permit(:name, :description, :state)
   end
 end
