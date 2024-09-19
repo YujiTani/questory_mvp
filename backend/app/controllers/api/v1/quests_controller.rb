@@ -1,6 +1,6 @@
 class Api::V1::QuestsController < Api::V1::BaseController
-  # すべてのメソッドであらかじめrequest_idを生成する
-  before_action :set_request_id, only: [:index, :create, :update, :destroy, :trashed]
+  # すべてのメソッドであらかじめresponse_idを生成する
+  before_action :set_response_id, only: [:index, :create, :update, :destroy, :trashed]
 
   def index
     all_quests = Quest.all.without_deleted
@@ -13,7 +13,7 @@ class Api::V1::QuestsController < Api::V1::BaseController
 
     render json: {
       ok: true,
-      request_id: @request_id,
+      response_id: @response_id,
       quests: quests,
       total: all_quests.count,
       limit: limit,
@@ -24,7 +24,7 @@ class Api::V1::QuestsController < Api::V1::BaseController
     logger.error "Error in QuestsController#index: #{e.message}"
     render json: {
       ok: false,
-      request_id: @request_id,
+      response_id: @response_id,
       code: "InternalServerError",
       message: "エラーの詳細メッセージ",
       errors: e.message
@@ -37,13 +37,13 @@ class Api::V1::QuestsController < Api::V1::BaseController
     if quest.save
       render json: {
         ok: true,
-        request_id: @request_id,
+        response_id: @response_id,
         quest: quest
       }, status: :ok
     else
       render json: {
         ok: false,
-        request_id: @request_id,
+        response_id: @response_id,
         code: "ParameterError",
         message: "パラメーターエラー （必須パラメーターを渡さなかった・パラメーターのデータ型を間違えた等）",
         errors: quest.errors.full_messages
@@ -58,13 +58,13 @@ class Api::V1::QuestsController < Api::V1::BaseController
     if quest.update(quest_params)
       render json: {
         ok: true,
-        request_id: @request_id,
+        response_id: @response_id,
         quest: quest
       }
     else
       render json: {
         ok: false,
-        request_id: @request_id,
+        response_id: @response_id,
         code: "NotFound",
         message: "エラーの詳細メッセージ",
         errors: quest.errors
@@ -78,12 +78,12 @@ class Api::V1::QuestsController < Api::V1::BaseController
     if quest.soft_delete
       render json: {
         ok: true,
-        request_id: @request_id,
+        response_id: @response_id,
       }
     else
       render json: {
         ok: false,
-        request_id: @request_id,
+        response_id: @response_id,
         code: "NotFound",
         message: "エラーの詳細メッセージ",
         errors: quest.errors
@@ -97,12 +97,12 @@ class Api::V1::QuestsController < Api::V1::BaseController
     if quest.destroy
       render json: {
         ok: true,
-        request_id: @request_id,
+        response_id: @response_id,
       }
     else
       render json: {
         ok: false,
-        request_id: @request_id,
+        response_id: @response_id,
         code: "NotFound",
         message: "エラーの詳細メッセージ",
         errors: quest.errors
@@ -116,7 +116,7 @@ class Api::V1::QuestsController < Api::V1::BaseController
     params.require(:quest).permit(:name, :description, :state)
   end
 
-  def set_request_id
-    @request_id = SecureRandom.uuid
+  def set_response_id
+    @response_id = SecureRandom.uuid
   end
 end
