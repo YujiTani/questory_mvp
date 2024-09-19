@@ -3,13 +3,9 @@ require 'rails_helper'
 RSpec.describe Api::V1::QuestsController, type: :controller do
   include LoginMacros
 
-  let(:valid_attributes) do
-    { name: "Test Quest", description: "Test Description", state: :draft }
-  end
-
-  let(:invalid_attributes) do
-    { name: "a" * 61, description: "a" * 1001, state: 'invalid_state' }
-  end
+  let(:valid_attributes) { { name: "Test Quest", description: "This is a test quest description" } }
+  # 無効な属性の例
+  let(:invalid_attributes) { { name: "a" * 61, description: "a" * 1001 } }
 
   describe "クエスト一覧を取得" do
     before { request.headers.merge!(basic_auth_headers) }
@@ -61,9 +57,31 @@ RSpec.describe Api::V1::QuestsController, type: :controller do
         json = JSON.parse(response.body)
         expect(json['ok']).to be_falsey
       end
+    end
+  end
 
+  describe "クエストを作成" do
+    before { request.headers.merge!(basic_auth_headers) }
+
+    context "正常系" do
+      it "有効なパラメーターでクエストを作成できること" do
+        expect { post :create, params: { quest: valid_attributes } }.to change(Quest, :count).by(1)
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_truthy
+        expect(json['quest']['name']).to eq('Test Quest')
+      end
     end
 
+    context "異常系" do
+      it "無効なパラメーターでクエストを作成できないこと" do
+        expect { post :create, params: { quest: invalid_attributes } }.to change(Quest, :count).by(0)
+        expect(response).to have_http_status(:bad_request)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_falsey
+        expect(json['errors']).to be_present
+      end
+    end
   end
 
 end
