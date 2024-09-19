@@ -24,6 +24,7 @@ class Quest < ApplicationRecord
     archived: 2,
   }
 
+  # バリデーション前にデフォルト値を設定する
   before_validation :set_default_values, on: :create
 
   validates :uuid, presence: true, uniqueness: true
