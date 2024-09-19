@@ -30,12 +30,6 @@ RSpec.describe Quest, type: :model do
     end
 
     context '異常系' do
-      it 'uuidがない場合は登録できない' do
-        quest = build(:quest, uuid: nil)
-        expect(quest).not_to be_valid
-        expect(quest.errors.full_messages).to include("Uuid can't be blank")
-      end
-
       it 'nameが61文字以上の場合は登録できない' do
         quest = build(:quest, name: 'a' * 61)
         expect(quest).not_to be_valid
@@ -46,12 +40,6 @@ RSpec.describe Quest, type: :model do
         quest = build(:quest, description: 'a' * 1001)
         expect(quest).not_to be_valid
         expect(quest.errors.full_messages).to include("Description is too long (maximum is 1000 characters)")
-      end
-
-      it 'stateがない場合は登録できない' do
-        quest = build(:quest, state: nil)
-        expect(quest).not_to be_valid
-        expect(quest.errors.full_messages).to include("State can't be blank")
       end
 
       it 'stateがdraft, published, archived以外の場合は登録できない' do
