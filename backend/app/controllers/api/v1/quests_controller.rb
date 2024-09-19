@@ -1,19 +1,20 @@
 class Api::V1::QuestsController < Api::V1::BaseController
   def index
-    quests = Quest.all.without_deleted
-    total = Quest.all_count
+    all_quests = Quest.all.without_deleted
     # limit,offsetを受け取った場合はその値を使用する
     limit = params[:limit] || 50
     offset = params[:offset] || 0
+
+    # limit, offsetを使って、questsを絞り込む
+    quests = all_quests.limit(limit).offset(offset)
 
     render json: {
       ok: true,
       request_id: SecureRandom.uuid,
       quests: quests,
-      total: total,
+      total: all_quests.count,
       limit: limit,
       offset: offset,
-      has_more: quests.has_more?(offset)
     }
 
   rescue => e

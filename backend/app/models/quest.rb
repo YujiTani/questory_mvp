@@ -42,14 +42,9 @@ class Quest < ApplicationRecord
     update(deleted_at: nil)
   end
 
-  # 論理削除されていないレコードの総数を取得
-  def all_count
-    Quest.all.without_deleted.count
-  end
-
   # 取得したデータ数と総数を比較して、取得するデータが残っているかどうか判定して返す
-  def has_more?(offset)
-    offset + self.count < Quest.all_count
+  def self.has_more?(offset)
+    offset + self.count < Quest.all.without_deleted.count
   end
 
   # 削除されたレコードを除外した取得
