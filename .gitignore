@@ -22,5 +22,5 @@ docker-compose.override.yml
 .env
 
 # SSL
-ssl/*.key
-ssl/*.crt
+/nginx/ssl/*.key
+/nginx/ssl/*.crt

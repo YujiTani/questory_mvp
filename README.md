@@ -1,6 +1,9 @@
 # 開発環境構築
+
 ## ローカルマシンで動かす場合
-###  Dockerを用いてコンテナを起動(backend、frontend、db、nginxすべてのコンテナが起動する)
+
+### Docker を用いてコンテナを起動(backend、frontend、db、nginx すべてのコンテナが起動する)
+
 ```
 # フォアグラウンド
 docker compose up --build
@@ -15,8 +18,9 @@ docker compose up -d --build
 ## 本番環境へのデプロイ
 
 ### 1. 本番環境変数用意
+
 .env.example ファイルをコピーし、.env にリネームして必要な値を埋める
-これらはbackendであれば、config/database.rbなどのファイルを自分で更新する
+これらは backend であれば、config/database.rb などのファイルを自分で更新する
 
 ```
 # 最上位ディレクトリに居る想定
@@ -25,6 +29,7 @@ cp .env.example .env
 ```
 
 ### 2. イメージをビルド
+
 ```
 # 最上位ディレクトリに居る想定
 docker build -t {username/reponame:tagname} /frontend or /backend
@@ -36,7 +41,7 @@ docker build --platform linux/amd64 -t {username/reponame:tagname} /frontend or 
 docker compose -f compose-prod.yml build frontend or backend
 ```
 
-### 3. イメージをDockerHubにpush
+### 3. イメージを DockerHub に push
 
 ```
 # さっき作ったイメージを使う
@@ -46,31 +51,37 @@ docker push {username/reponame:tagname}
 docker compose -f compose-prod.yml push frontend or backend
 ```
 
-### 4. ssh接続(リモート接続)
+### 4. ssh 接続(リモート接続)
+
 ```
 ssh {ログイン名}@{接続先}
 ```
 
-### 5. リモート接続先にclone
+### 5. リモート接続先に clone
+
 ```
 # gitなど本番の開発環境構築は完了している前提
 
 git pull git@github.com:YujiTani/questory_mvp.git
 ```
 
-### 6. DockerHubから push したイメージを pull
+### 6. DockerHub から push したイメージを pull
+
 ```
 docker compose -f compose-prod.yml pull frontend or backend
 ```
 
 ### 7. イメージからコンテナ起動
+
 ```
 docker compose -f compose-prod.yml up -d frontend or backend
 ```
 
 ---
+
 ## ライブラリの追加
-cleanな一時コンテナを使用した追加方法を記述
+
+clean な一時コンテナを使用した追加方法を記述
 
 ```
 # Ruby on Rails Gemの追加
@@ -80,3 +91,15 @@ docker compose run --rm backend gem install  {追加したいgem名}
 docker compose run --rm frontend yarn add {追加したいライブラリ名}
 ```
 
+---
+
+## 自己証明書の作成
+
+開発環境では、自己証明書を使用する
+コマンド実行後、情報入力を求められるが、すべてデフォルト値で問題ない
+
+```
+# 最上位ディレクトリに居る想定
+
+openssl req -x509 -newkey rsa:2048 -days 365 -nodes -keyout nginx/ssl/server.key -out nginx/ssl/server.crt
+```
