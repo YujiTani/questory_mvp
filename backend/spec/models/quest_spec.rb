@@ -43,7 +43,7 @@ RSpec.describe Quest, type: :model do
       end
 
       it 'stateがdraft, published, archived以外の場合は登録できない' do
-        expect { build(:quest, state: 'invalid_state') }.to raise_error(ArgumentError)
+        expect { create(:quest, state: 'invalid_state') }.to raise_error(ArgumentError)
       end
     end
 
