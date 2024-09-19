@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
   include ActionController::HttpAuthentication::Basic::ControllerMethods
   before_action :basic_auth
+  before_action :generate_response_id
 
   rescue_from ActiveRecord::RecordInvalid, with: :handle_record_invalid
   rescue_from ArgumentError, with: :handle_argument_error
