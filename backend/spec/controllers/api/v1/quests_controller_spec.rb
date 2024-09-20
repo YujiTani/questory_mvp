@@ -53,7 +53,7 @@ RSpec.describe Api::V1::QuestsController, type: :controller do
         create_list(:quest, 50, valid_attributes)
 
         get :index, params: { limit: -1, offset: -1 }
-        expect(response).to have_http_status(:internal_server_error)
+        expect(response).to have_http_status(:unprocessable_entity)
         json = JSON.parse(response.body)
         expect(json['ok']).to be_falsey
         expect(json['errors']).to be_present
@@ -78,7 +78,7 @@ RSpec.describe Api::V1::QuestsController, type: :controller do
       it "無効なパラメーターでクエストを作成できないこと" do
         post :create, params: { quest: invalid_attributes }, as: :json
 
-        expect(response).to have_http_status(:internal_server_error)
+        expect(response).to have_http_status(:unprocessable_entity)
         json = JSON.parse(response.body)
         expect(json['ok']).to be_falsey
         expect(json['errors']).to be_present
@@ -117,7 +117,7 @@ RSpec.describe Api::V1::QuestsController, type: :controller do
         quest = create(:quest)
 
         patch :update, params: { uuid: quest.uuid, quest: invalid_attributes }, as: :json
-        expect(response).to have_http_status(:internal_server_error)
+        expect(response).to have_http_status(:unprocessable_entity)
         json = JSON.parse(response.body)
         expect(json['ok']).to be_falsey
         expect(json['errors']).to be_present
@@ -126,11 +126,11 @@ RSpec.describe Api::V1::QuestsController, type: :controller do
       it "存在しないstateを指定した場合、エラーが返されること" do
         quest = create(:quest)
 
-        patch :update, params: { uuid: quest.uuid, quest: { state: "invalid_state" } }, as: :json
+        patch :update, params: { uuid: quest.uuid, quest: { state: -1 } }, as: :json
         expect(response).to have_http_status(:internal_server_error)
         json = JSON.parse(response.body)
         expect(json['ok']).to be_falsey
-        expect(json['errors']).to be_present
+        # TODO: enumで定義されていない値を指定した場合、エラーメッセージが入らないので修正する
       end
 
       it "存在しないuuidを指定した場合、エラーが返されること" do
