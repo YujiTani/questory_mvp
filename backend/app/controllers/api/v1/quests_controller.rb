@@ -1,5 +1,5 @@
 class Api::V1::QuestsController < Api::V1::BaseController
-  before_action :set_quest_by_uuid, only: [:update, :destroy, :trashed]
+  before_action :set_quest_by_uuid, only: %i[update destroy trashed restore destroy]
 
   def index
     all_quests = Quest.all.without_deleted
@@ -47,6 +47,7 @@ class Api::V1::QuestsController < Api::V1::BaseController
       render json: {
         ok: true,
         response_id: @response_id,
+        quest: @quest
       }
     else
       render json: {
@@ -56,6 +57,16 @@ class Api::V1::QuestsController < Api::V1::BaseController
         message: "エラーの詳細メッセージ",
         errors: @quest.errors
       }
+    end
+  end
+
+  def restore
+    if @quest.update!(deleted_at: nil)
+      render json: {
+        ok: true,
+        response_id: @response_id,
+        quest: @quest
+      }, status: :ok
     end
   end
 

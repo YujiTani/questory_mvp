@@ -144,4 +144,77 @@ RSpec.describe Api::V1::QuestsController, type: :controller do
     end
   end
 
+  describe "クエストを削除" do
+    before { request.headers.merge!(basic_auth_headers) }
+
+    context "正常系" do
+      it "有効なuuidを指定した場合、クエストを論理削除できること" do
+        quest = create(:quest)
+
+        delete :destroy, params: { uuid: quest.uuid }, as: :json
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_truthy
+        # deleted_atにnilが入ってなければ、論理削除されている
+        expect(json['quest']['deleted_at']).to_not be_nil
+      end
+
+      it "論理削除から復元" do
+        quest = create(:quest, deleted_at: Time.now)
+
+        put :restore, params: { uuid: quest.uuid }, as: :json
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_truthy
+        # deleted_atがnilになっていれば論理削除から復元されている
+        expect(json['quest']['deleted_at']).to be_nil
+      end
+
+      context "論理削除されたクエストを完全削除" do
+        it "有効なuuidを指定した場合、クエストを完全削除できること" do
+          quest = create(:quest, deleted_at: Time.now)
+
+          delete :trashed, params: { uuid: quest.uuid }, as: :json
+          expect(response).to have_http_status(:ok)
+          json = JSON.parse(response.body)
+          expect(json['ok']).to be_truthy
+        end
+      end
+    end
+
+    context "異常系" do
+      it "存在しないuuidを指定した場合、エラーが返されること" do
+        create(:quest)
+
+        delete :destroy, params: { uuid: "invalid_uuid" }, as: :json
+        expect(response).to have_http_status(:not_found)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_falsey
+        expect(json['code']).to eq("NotFound")
+        expect(json['message']).to be_present
+      end
+
+      it "存在しないuuidのクエストを復元しようとした場合、エラーが返されること" do
+        create(:quest)
+
+        put :restore, params: { uuid: "invalid_uuid" }, as: :json
+        expect(response).to have_http_status(:not_found)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_falsey
+        expect(json['code']).to eq("NotFound")
+        expect(json['message']).to be_present
+      end
+
+      it "存在しないuuidのクエストを完全削除を実行しようとした場合、エラーが返されること" do
+        create(:quest)
+
+        delete :trashed, params: { uuid: "invalid_uuid" }, as: :json
+        expect(response).to have_http_status(:not_found)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_falsey
+        expect(json['code']).to eq("NotFound")
+        expect(json['message']).to be_present
+      end
+    end
+  end
 end
