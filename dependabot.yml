@@ -1,0 +1,21 @@
+version: 2 # Dependabotの設定バージョン
+# 依存関係の更新設定
+updates:
+  # GitHub Actions の設定
+  - package-ecosystem: "github-actions" # GitHub Actions の依存関係を管理
+    directory: "/" # 依存関係ファイルが存在するディレクトリ
+    schedule:
+      interval: "daily" # 更新チェックの頻度
+    open-pull-requests-limit: 10 # 開くプルリクエストの最大数
+
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "bundler"
+    directory: "/backend"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
