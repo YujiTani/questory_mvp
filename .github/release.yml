@@ -1,0 +1,37 @@
+# リリースノートの自動生成用ファイル
+# https://github.com/lerna/lerna/tree/main/packages/lerna-changelog
+# 付与されているラベルで、区分する
+changelog:
+  categories:
+    - title: 🚀 Major Changes
+      labels:
+        - major
+        - breaking-change
+    - title: 🎉 Minor Features
+      labels:
+        - minor
+        - feature
+        - enhancement
+    - title: 🐛 Patch Fixes
+      labels:
+        - patch
+        - bug
+        - fix
+    - title: 📚 Documentation
+      labels:
+        - documentation
+    - title: 🧪 Tests
+      labels:
+        - test
+    - title: 🛠 Maintenance
+      labels:
+        - chore
+        - maintenance
+    - title: 🔧 Build System & Dependencies
+      labels:
+        - build
+        - dependencies
+# 除外するユーザー
+exclude:
+  authors:
+    - dependabot
