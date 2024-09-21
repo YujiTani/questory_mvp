@@ -1,0 +1,73 @@
+name: Verify Ruby on Rails
+
+on:
+  pull_request:
+    branches-ignore:
+      - main
+    paths:
+      - "rails/**"
+  workflow_dispatch:
+
+defaults:
+  run:
+    # デフォルトのシェルをbashに設定
+    shell: bash
+
+# 同一グループのワークフローが多重起動しないように設定
+# 同プルリクエストで複数ワークフローが起動した場合に、古いワークフローをキャンセルする
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-rails:
+    runs-on: ubuntu-latest
+    # ジョブのタイムアウト時間を5分に設定
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:13
+        ports:
+          - 5433:5432
+        env:
+          # secrets環境変数をGitHubで管理する
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          options: --health-cmd="pg_isready -U postgres" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@127.0.0.1:5433/${{ secrets.DB_NAME }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.5
+          bundler-cache: true
+          working-directory: ./backend
+
+      - name: Output versions
+        run: |
+          ruby -v
+          bundler -v
+
+      - name: Setup database
+        working-directory: ./backend
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:schema:load
+
+      - name: Run RSpec tests
+        working-directory: ./backend
+        run: |
+          bundle exec rspec
+
+      - name: Run Rubocop
+        working-directory: ./backend
+        run: bundle exec rubocop
