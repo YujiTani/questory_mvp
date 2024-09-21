@@ -26,6 +26,7 @@ class Api::V1::CoursesController < Api::V1::BaseController
       }, status: :ok
     end
   end
+
   # クエストに紐づくコース一覧を取得
   def courses
     @courses = @quest.courses.without_deleted
