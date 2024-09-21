@@ -61,7 +61,7 @@ class Api::V1::QuestsController < Api::V1::BaseController
   end
 
   def restore
-    if @quest.update!(deleted_at: nil)
+    if @quest.restore
       render json: {
         ok: true,
         response_id: @response_id,

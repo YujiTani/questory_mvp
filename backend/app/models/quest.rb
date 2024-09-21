@@ -32,8 +32,6 @@ class Quest < ApplicationRecord
   validates :description, length: { maximum: 1000 }, allow_nil: true
   validates :state, presence: true, inclusion: { in: states.keys }
 
-  # create メソッドや save メソッドでオブジェクトが初めてデータベースに保存される前に、実行される
-
   # 論理削除
   def soft_delete
     update(deleted_at: Time.current)
@@ -59,6 +57,7 @@ class Quest < ApplicationRecord
   private
 
   # デフォルト値設定メソッド
+  # create メソッドや save メソッドでオブジェクトが初めてデータベースに保存される前に、実行される
   def set_default_values
     self.uuid = SecureRandom.uuid
     self.state ||= 0
