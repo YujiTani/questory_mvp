@@ -31,7 +31,8 @@ class ApplicationController < ActionController::API
 
   # # レコードが無効な場合のエラーハンドリング
   def handle_record_invalid(exception)
-    render json: { ok: false, response_id: @response_id, errors: exception.record.errors.full_messages }, status: :unprocessable_entity
+    render json: { ok: false, response_id: @response_id, errors: exception.record.errors.full_messages },
+           status: :unprocessable_entity
   end
 
   # # 引数が無効な場合のエラーハンドリング
