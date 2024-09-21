@@ -1,0 +1,31 @@
+- name: feature
+  color: "7FDBFF"
+  description: New feature or request
+
+- name: enhancement
+  color: "2ECC40"
+  description: Improvement to existing features
+
+- name: breaking-change
+  color: "B10DC9"
+  description: Changes that break existing functionality
+
+- name: refactor
+  color: "FF851B"
+  description: A change that improves performance or readability without changing behavior
+
+- name: bug
+  color: "FF851B"
+  description: Something isn't working as expected
+
+- name: fix
+  color: "F012BE"
+  description: A fix for a reported issue
+
+- name: documentation
+  color: "01FF70"
+  description: Improvements or additions to documentation
+
+- name: release
+  color: "01FF70"
+  description: Release
