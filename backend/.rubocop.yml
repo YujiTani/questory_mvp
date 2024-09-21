@@ -1,8 +1,112 @@
-# Omakase Ruby styling for Rails
-inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+inherit_from: .rubocop_todo.yml
 
-# Overwrite or add rules to create your own house style
-#
-# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
-# Layout/SpaceInsideArrayLiteralBrackets:
-#   Enabled: false
+require:
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-factory_bot
+  - rubocop-performance
+  - rubocop-rspec_rails
+
+# 全般的な設定
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.1
+  Exclude:
+    - "db/**/*"
+    - "config/**/*"
+    - "bin/**/*"
+    - "vendor/**/*"
+
+# メトリクス関連の設定
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/ClassLength:
+  Max: 200
+
+Metrics/ModuleLength:
+  Max: 200
+
+Metrics/BlockLength:
+  Max: 50
+  Exclude:
+    - "spec/**/*"
+    - "test/**/*"
+
+Layout/LineLength:
+  Max: 120
+
+# スタイル関連の設定
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Style/WordArray:
+  EnforcedStyle: brackets
+
+Naming/MethodName:
+  EnforcedStyle: snake_case
+
+# 命名規則関連の設定
+Naming/VariableName:
+  MinNameLength:
+    - 2
+  AllowLeadingUnderscore: true
+
+# Lint関連の設定
+Lint/UselessAssignment:
+  Enabled: true
+
+Lint/Void:
+  Enabled: true
+
+# Rails関連の設定
+Rails:
+  Enabled: true
+
+Rails/FilePath:
+  EnforcedStyle: arguments
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/HttpStatus:
+  Enabled: true
+
+# RSpec関連の設定
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/DescribeClass:
+  Enabled: true
+
+# セキュリティ関連の設定
+Security/Eval:
+  Enabled: true
+
+# JSONの読み込みをチェック
+Security/JSONLoad:
+  Enabled: true
+
+# ファイルの読み込みをチェック
+Security/Open:
+  Enabled: true
+
+# YAMLの読み込みをチェック
+Security/YAMLLoad:
+  Enabled: true
+
+# パフォーマンス関連の設定
+Performance/Count:
+  Enabled: true
+
+Performance/MapCompact:
+  Enabled: true
