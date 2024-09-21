@@ -1,0 +1,29 @@
+name: Verify Workflow
+
+on:
+  pull_request:
+    branches-ignore:
+      - main
+    paths:
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run actionlint
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/repo -w /repo rhysd/actionlint:latest -color
