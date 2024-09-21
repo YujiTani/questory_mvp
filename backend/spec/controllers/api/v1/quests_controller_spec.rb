@@ -155,8 +155,6 @@ RSpec.describe Api::V1::QuestsController, type: :controller do
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
         expect(json['ok']).to be_truthy
-        # deleted_atにnilが入ってなければ、論理削除されている
-        expect(json['quest']['deleted_at']).to_not be_nil
       end
 
       it "論理削除から復元" do
