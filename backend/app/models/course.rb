@@ -40,12 +40,12 @@ class Course < ApplicationRecord
 
   # クエストと紐づける
   def associate_quest(quest)
-    self.quest = quest
+    update!(quest: quest)
   end
 
   # クエストとの紐づけを解除する
   def unassociate_quest
-    self.quest = nil
+    update!(quest: nil)
   end
 
   # 削除されたレコードを除外した取得
