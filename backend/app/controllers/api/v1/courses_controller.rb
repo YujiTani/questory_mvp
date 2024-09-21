@@ -27,18 +27,6 @@ class Api::V1::CoursesController < Api::V1::BaseController
     end
   end
 
-  # クエストに紐づくコース一覧を取得
-  def courses
-    @courses = @quest.courses.without_deleted
-    serialized_courses = @courses.map { |course| CourseSerializer.new(course) }
-
-    render json: {
-      ok: true,
-      response_id: @response_id,
-      courses: serialized_courses
-    }, status: :ok
-  end
-
   # DELETE /api/v1/courses/:uuid
   # コースを論理削除
   def destroy
