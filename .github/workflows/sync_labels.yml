@@ -23,4 +23,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHubトークンを環境変数として設定
         with:
-          manifest: .github/labels.yml # ラベルの定義ファイルのパス
+          manifest: .github/make_label.yml # ラベルの定義ファイルのパス

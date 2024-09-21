@@ -1,0 +1,25 @@
+ci:
+  - changed-files:
+      - any-glob-to-any-file: [".github/**/*"]
+
+environment:
+  - changed-files:
+      - any-glob-to-any-file: ["scripts/**/*"]
+
+"enhancement feature":
+  - head-branch: ["^feature"]
+
+"refactor fix":
+  - head-branch: ["^refactor"]
+
+"bug fix":
+  - head-branch: ["^fix"]
+
+release:
+  - head-branch: ["^release"]
+
+documentation:
+  - head-branch: ["^documentation"]
+
+"breaking-change":
+  - head-branch: ["^breaking-change"]
