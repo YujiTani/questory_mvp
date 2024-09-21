@@ -1,5 +1,5 @@
 class Api::V1::QuestsController < Api::V1::BaseController
-  before_action :set_quest_by_uuid, only: %i[update destroy trashed restore destroy]
+  before_action :set_quest_by_uuid, only: [:update, :destroy, :trashed, :restore, :destroy]
 
   def index
     all_quests = Quest.all.without_deleted

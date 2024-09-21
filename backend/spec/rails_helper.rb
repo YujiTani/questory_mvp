@@ -70,5 +70,5 @@ RSpec.configure do |config|
   # FactoryBot のシンタックスメソッドをインクルード
   config.include FactoryBot::Syntax::Methods
   # LoginMacros を特定のタイプに対してインクルード
-  config.include LoginMacros, type: %w[controller request ]
+  config.include LoginMacros, type: ['controller', 'request']
 end
