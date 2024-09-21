@@ -9,7 +9,7 @@ Rails.application.routes.draw do
           delete :trashed
           put :restore
         end
-        resources :courses, param: :uuid, only: %i[index update destroy]
+        resources :courses, controller: 'quest_courses', param: :uuid, only: %i[index update destroy]
       end
 
       resources :courses, param: :uuid, except: %i[new index show] do

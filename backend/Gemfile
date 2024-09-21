@@ -9,6 +9,7 @@ gem "puma", ">= 5.0"
 gem "rack-cors"
 gem 'rubocop', require: false
 gem "tzinfo-data", platforms: [:windows, :jruby]
+gem 'active_model_serializers'
 
 group :development, :test do
   gem "brakeman", require: false

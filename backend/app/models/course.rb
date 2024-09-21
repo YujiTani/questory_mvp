@@ -1,28 +1,24 @@
-class Quest < ApplicationRecord
+class Course < ApplicationRecord
   # == Schema Information
   #
   # id           :bigint           not null, primary key
   # uuid         :uuid             not null
+  # quest_id     :bigint           not null
   # name         :string(255)
   # description  :text(65535)
-  # state        :integer          default("draft"), not null
+  # difficulty   :integer          default(0), not null
   # created_at   :datetime         not null
   # updated_at   :datetime         not null
   # deleted_at   :datetime
   #
   # Indexes
-  # index_quests_on_state
-  # index_quests_on_uuid
+  # index_courses_on_difficulty
+  # index_courses_on_quest_id
+  # index_courses_on_uuid
   #
   # foreign_key: :quest_id
   #
-  has_many :courses
-
-  enum state: {
-    draft: 0,
-    published: 1,
-    archived: 2,
-  }
+  belongs_to :quest
 
   # バリデーション前にデフォルト値を設定する
   before_validation :set_default_values, on: :create
@@ -30,7 +26,7 @@ class Quest < ApplicationRecord
   validates :uuid, presence: true, uniqueness: true
   validates :name, length: { maximum: 60 }, allow_nil: true
   validates :description, length: { maximum: 1000 }, allow_nil: true
-  validates :state, presence: true, inclusion: { in: states.keys }
+  validates :difficulty, presence: true, inclusion: { in: 0..2 }
 
   # 論理削除
   def soft_delete
@@ -42,9 +38,14 @@ class Quest < ApplicationRecord
     update(deleted_at: nil)
   end
 
-  # 取得したデータ数と総数を比較して、取得するデータが残っているかどうか判定して返す
-  def self.has_more?(offset)
-    offset + self.count < Quest.all.without_deleted.count
+  # クエストと紐づける
+  def associate_quest(quest)
+    update!(quest: quest)
+  end
+
+  # クエストとの紐づけを解除する
+  def unassociate_quest
+    update!(quest: nil)
   end
 
   # 削除されたレコードを除外した取得
@@ -57,10 +58,9 @@ class Quest < ApplicationRecord
   private
 
   # デフォルト値設定メソッド
-  # create メソッドや save メソッドでオブジェクトが初めてデータベースに保存される前に、実行される
   def set_default_values
     self.uuid = SecureRandom.uuid
-    self.state ||= 0
+    self.difficulty ||= 0
   end
 
 end

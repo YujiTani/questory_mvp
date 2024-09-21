@@ -1,6 +1,8 @@
 class Api::V1::QuestsController < Api::V1::BaseController
   before_action :set_quest_by_uuid, only: [:update, :destroy, :trashed, :restore, :destroy]
 
+  # GET /api/v1/quests
+  # クエスト一覧を取得
   def index
     all_quests = Quest.all.without_deleted
     limit = params[:limit] || 50
@@ -8,17 +10,20 @@ class Api::V1::QuestsController < Api::V1::BaseController
 
     # limit, offsetを使って、questsを絞り込む
     @quests = all_quests.limit(limit).offset(offset)
+    serialized_quests = @quests.map { |quest| QuestSerializer.new(quest) }
 
     render json: {
       ok: true,
       response_id: @response_id,
-      quests: @quests,
+      quests: serialized_quests,
       total: all_quests.count,
       limit: limit,
       offset: offset,
     }, status: :ok
   end
 
+  # POST /api/v1/quests
+  # クエストを作成
   def create
     @quest = Quest.new(quest_params)
 
@@ -26,64 +31,54 @@ class Api::V1::QuestsController < Api::V1::BaseController
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: @quest
+        quest: QuestSerializer.new(@quest)
       }, status: :ok
     end
   end
 
-
+  # PATCH /api/v1/quests/:uuid
+  # クエストを更新
   def update
     if @quest.update!(quest_params)
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: @quest
+        quest: QuestSerializer.new(@quest)
       }, status: :ok
     end
   end
 
+  # DELETE /api/v1/quests/:uuid
+  # クエストを論理削除
   def destroy
     if @quest.soft_delete
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: @quest
-      }
-    else
-      render json: {
-        ok: false,
-        response_id: @response_id,
-        code: "NotFound",
-        message: "エラーの詳細メッセージ",
-        errors: @quest.errors
       }
     end
   end
 
+  # DELETE /api/v1/quests/:uuid/restore
+  # クエストを論理削除を元に戻す
   def restore
-    if @quest.update!(deleted_at: nil)
+    if @quest.restore
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: @quest
+        quest: QuestSerializer.new(@quest)
       }, status: :ok
     end
   end
 
+  # DELETE /api/v1/quests/:uuid/trashed
+  # クエストを完全削除
   def trashed
     if @quest.destroy
       render json: {
         ok: true,
         response_id: @response_id,
-      }
-    else
-      render json: {
-        ok: false,
-        response_id: @response_id,
-        code: "NotFound",
-        message: "エラーの詳細メッセージ",
-        errors: @quest.errors
-      }
+      }, status: :ok
     end
   end
 
