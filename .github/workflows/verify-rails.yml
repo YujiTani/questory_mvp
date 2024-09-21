@@ -31,15 +31,14 @@ jobs:
           - 5432:5432
         env:
           # secrets環境変数をGitHubで管理する
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_HOST: ${{ secrets.DB_HOST }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           options: --health-cmd="pg_isready -U postgres" --health-interval=10s --health-timeout=5s --health-retries=5
 
     env:
       RAILS_ENV: test
-      DATABASE_URL: postgres://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@127.0.0.1:5433/${{ secrets.DB_NAME }}
+      DATABASE_URL: postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@127.0.0.1:5433/${{ secrets.POSTGRES_DB }}
 
     steps:
       - name: Checkout code
