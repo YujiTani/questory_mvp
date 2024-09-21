@@ -1,5 +1,5 @@
 class Api::V1::CoursesController < Api::V1::BaseController
-  before_action :set_course_by_uuid, only: [:show, :update, :destroy]
+  before_action :set_course_by_uuid, only: [:show, :update, :destroy, :restore, :trashed]
 
   # POST /api/v1/courses
   # コースを作成
@@ -38,6 +38,8 @@ class Api::V1::CoursesController < Api::V1::BaseController
     }, status: :ok
   end
 
+  # DELETE /api/v1/courses/:uuid
+  # コースを論理削除
   def destroy
     if @course.soft_delete
       render json: {
@@ -47,6 +49,8 @@ class Api::V1::CoursesController < Api::V1::BaseController
     end
   end
 
+  # DELETE /api/v1/courses/:uuid/restore
+  # コースを論理削除を元に戻す
   def restore
     if @course.restore
       render json: {
@@ -57,6 +61,8 @@ class Api::V1::CoursesController < Api::V1::BaseController
     end
   end
 
+  # DELETE /api/v1/courses/:uuid/trashed
+  # コースを完全削除
   def trashed
     if @course.destroy
       render json: {
