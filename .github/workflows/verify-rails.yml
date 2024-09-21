@@ -28,7 +28,7 @@ jobs:
       postgres:
         image: postgres:13
         ports:
-          - 5432:5432
+          - 5433:5432
         env:
           # secrets環境変数をGitHubで管理する
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
