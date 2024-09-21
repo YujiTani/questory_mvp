@@ -103,3 +103,17 @@ docker compose run --rm frontend yarn add {追加したいライブラリ名}
 
 openssl req -x509 -newkey rsa:2048 -days 365 -nodes -keyout nginx/ssl/server.key -out nginx/ssl/server.crt
 ```
+
+## rubocop の設定
+
+コードチェックを行う
+```
+# 最上位ディレクトリに居る想定
+
+docker compose run --rm backend bundle exec rubocop --auto-correct
+```
+
+コードの自動修正
+```
+docker compose run --rm backend bundle exec rubocop -a
+```
