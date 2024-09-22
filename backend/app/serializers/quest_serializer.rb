@@ -1,3 +1,6 @@
 class QuestSerializer < ActiveModel::Serializer
-  attributes %w[uuid name description state]
+  attribute :uuid, key: :id
+  attribute :name
+  attribute :description
+  attribute :state
 end
