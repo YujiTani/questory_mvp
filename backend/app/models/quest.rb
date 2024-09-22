@@ -16,7 +16,7 @@ class Quest < ApplicationRecord
   #
   # foreign_key: :quest_id
   #
-  has_many :courses
+  has_many :courses, dependent: :nullify
 
   enum :state, { draft: 0, published: 1, archived: 2 }
 

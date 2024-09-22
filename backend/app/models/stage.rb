@@ -45,11 +45,11 @@ class Stage < ApplicationRecord
     update(deleted_at: nil)
   end
 
-  def associate_course(course)
+  def associate_stage(course)
     update!(course: course)
   end
 
-  def unassociate_course
+  def unassociate_stage
     update!(course: nil)
   end
 
