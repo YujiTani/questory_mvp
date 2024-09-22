@@ -8,6 +8,7 @@ Rails.application.routes.draw do
         member do
           delete :trashed
           put :restore
+          patch :associate_courses
         end
         resources :courses, controller: 'quest_courses', param: :uuid, only: %i[index update destroy]
       end

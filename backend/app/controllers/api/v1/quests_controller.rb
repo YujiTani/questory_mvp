@@ -1,5 +1,5 @@
 class Api::V1::QuestsController < Api::V1::BaseController
-  before_action :set_quest_by_uuid, only: [:update, :destroy, :trashed, :restore, :destroy]
+  before_action :set_quest_by_uuid, only: [:update, :destroy, :trashed, :restore, :associate_courses]
 
   # GET /api/v1/quests
   # クエスト一覧を取得
@@ -10,12 +10,11 @@ class Api::V1::QuestsController < Api::V1::BaseController
 
     # limit, offsetを使って、questsを絞り込む
     @quests = all_quests.limit(limit).offset(offset)
-    serialized_quests = @quests.map { |quest| QuestSerializer.new(quest) }
 
     render json: {
       ok: true,
       response_id: @response_id,
-      quests: serialized_quests,
+      quests: @quests,
       total: all_quests.count,
       limit: limit,
       offset: offset,
@@ -31,7 +30,7 @@ class Api::V1::QuestsController < Api::V1::BaseController
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: QuestSerializer.new(@quest)
+        quest: @quest,
       }, status: :ok
     end
   end
@@ -43,9 +42,23 @@ class Api::V1::QuestsController < Api::V1::BaseController
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: QuestSerializer.new(@quest)
+        quest: @quest,
       }, status: :ok
     end
+  end
+
+  # PATCH /api/v1/quests/:uuid/associate_courses
+  # 指定クエストにコースを紐付ける
+  def associate_courses
+    course_uuids = params[:course_uuids]
+    courses = course_uuids.map { |uuid| Course.find_by(uuid: uuid) }
+
+    courses.map { |course| course.associate_quest(@quest) }
+
+    render json: {
+      ok: true,
+      response_id: @response_id,
+    }, status: :ok
   end
 
   # DELETE /api/v1/quests/:uuid
@@ -66,7 +79,7 @@ class Api::V1::QuestsController < Api::V1::BaseController
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: QuestSerializer.new(@quest)
+        quest: @quest,
       }, status: :ok
     end
   end
@@ -91,7 +104,6 @@ class Api::V1::QuestsController < Api::V1::BaseController
       render json: {
         ok: false,
         response_id: @response_id,
-        code: "NotFound",
         message: "クエストが見つかりませんでした",
       }, status: :not_found
     end

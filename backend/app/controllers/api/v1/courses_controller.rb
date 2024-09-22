@@ -1,5 +1,5 @@
 class Api::V1::CoursesController < Api::V1::BaseController
-  before_action :set_course_by_uuid, only: [:show, :update, :destroy, :restore, :trashed]
+  before_action :set_course_by_uuid, only: [:update, :destroy, :restore, :trashed]
 
   # POST /api/v1/courses
   # コースを作成
@@ -10,7 +10,7 @@ class Api::V1::CoursesController < Api::V1::BaseController
       render json: {
         ok: true,
         response_id: @response_id,
-        course: CourseSerializer.new(@course)
+        course: @course
       }, status: :ok
     end
   end
@@ -22,7 +22,7 @@ class Api::V1::CoursesController < Api::V1::BaseController
       render json: {
         ok: true,
         response_id: @response_id,
-        course: CourseSerializer.new(@course)
+        course: @course
       }, status: :ok
     end
   end
@@ -45,7 +45,7 @@ class Api::V1::CoursesController < Api::V1::BaseController
       render json: {
         ok: true,
         response_id: @response_id,
-        course: CourseSerializer.new(@course)
+        course: @course
       }, status: :ok
     end
   end
@@ -70,7 +70,6 @@ class Api::V1::CoursesController < Api::V1::BaseController
       render json: {
         ok: false,
         response_id: @response_id,
-        code: "NotFound",
         message: "コースが見つかりませんでした",
       }, status: :not_found
     end

@@ -138,7 +138,6 @@ RSpec.describe Api::V1::QuestsController, type: :controller do
         expect(response).to have_http_status(:not_found)
         json = JSON.parse(response.body)
         expect(json['ok']).to be_falsey
-        expect(json['code']).to eq("NotFound")
         expect(json['message']).to be_present
       end
     end
@@ -188,7 +187,6 @@ RSpec.describe Api::V1::QuestsController, type: :controller do
         expect(response).to have_http_status(:not_found)
         json = JSON.parse(response.body)
         expect(json['ok']).to be_falsey
-        expect(json['code']).to eq("NotFound")
         expect(json['message']).to be_present
       end
 
@@ -199,7 +197,6 @@ RSpec.describe Api::V1::QuestsController, type: :controller do
         expect(response).to have_http_status(:not_found)
         json = JSON.parse(response.body)
         expect(json['ok']).to be_falsey
-        expect(json['code']).to eq("NotFound")
         expect(json['message']).to be_present
       end
 
@@ -210,7 +207,40 @@ RSpec.describe Api::V1::QuestsController, type: :controller do
         expect(response).to have_http_status(:not_found)
         json = JSON.parse(response.body)
         expect(json['ok']).to be_falsey
-        expect(json['code']).to eq("NotFound")
+        expect(json['message']).to be_present
+      end
+    end
+  end
+
+  describe "指定クエストにコースを紐付ける" do
+    before { request.headers.merge!(basic_auth_headers) }
+
+    let!(:quest) { create(:quest) }
+    let!(:course1) { create(:course) }
+    let!(:course2) { create(:course) }
+
+    context "正常系" do
+      it "指定のクエストにコースが紐づくこと" do
+        patch :associate_courses, params: { uuid: quest.uuid, course_uuids: [course1.uuid] }
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_truthy
+      end
+
+      it "指定のクエストに2つのコースが紐づくこと" do
+        patch :associate_courses, params: { uuid: quest.uuid, course_uuids: [course1.uuid, course2.uuid] }
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_truthy
+      end
+    end
+
+    context "異常系" do
+      it "クエストが存在しない場合はエラーが返されること" do
+        patch :associate_courses, params: { uuid: 'invalid-uuid', course_uuids: [course1.uuid, course2.uuid] }
+        expect(response).to have_http_status(:not_found)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_falsey
         expect(json['message']).to be_present
       end
     end
