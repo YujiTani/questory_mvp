@@ -17,8 +17,9 @@ Rails.application.routes.draw do
         member do
           delete :trashed
           put :restore
+          patch :associate_stages
         end
-        resources :stages, param: :uuid, only: %i[index update destroy]
+        resources :stages, controller: 'course_stages', param: :uuid, only: %i[index update destroy]
       end
 
       resources :stages, param: :uuid, except: %i[new index show] do
