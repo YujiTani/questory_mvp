@@ -53,7 +53,7 @@ class Api::V1::QuestsController < Api::V1::BaseController
     course_uuids = params[:course_uuids]
     courses = course_uuids.map { |uuid| Course.find_by(uuid: uuid) }
 
-    courses.map { |course| course.associate_quest(quest) }
+    courses.map { |course| course.associate_quest(@quest) }
 
     render json: {
       ok: true,
