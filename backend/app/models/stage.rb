@@ -4,7 +4,7 @@ class Stage < ApplicationRecord
   # id           :bigint           not null, primary key
   # uuid         :uuid             not null
   # course_id    :bigint           null: true
-  # prefix       :string(255)      not null
+  # prefix       :string(255)      not null, unique: true
   # overview     :string(255)
   # target       :string(255)
   # failed_case  :integer          default(0), not null
@@ -18,6 +18,7 @@ class Stage < ApplicationRecord
   # index_stages_on_course_id
   # index_stages_on_state
   # index_stages_on_uuid
+  # index_stages_on_prefix
   #
   # foreign_key: :course_id
 
@@ -29,7 +30,7 @@ class Stage < ApplicationRecord
 
   validates :uuid, presence: true, uniqueness: true
   validates :course, presence: true, if: :course_id?
-  validates :prefix, presence: true, length: { maximum: 5 }
+  validates :prefix, presence: true, uniqueness: true, length: { maximum: 5 }
   validates :overview, length: { maximum: 255 }
   validates :target, length: { maximum: 255 }
   validates :state, presence: true, inclusion: { in: states.keys }
