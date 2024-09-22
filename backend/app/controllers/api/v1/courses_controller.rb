@@ -1,5 +1,5 @@
 class Api::V1::CoursesController < Api::V1::BaseController
-  before_action :set_course_by_uuid, only: [:update, :destroy, :restore, :trashed]
+  before_action :set_course_by_uuid, only: [:update, :destroy, :restore, :trashed, :associate_stages]
 
   # POST /api/v1/courses
   # コースを作成
@@ -26,6 +26,21 @@ class Api::V1::CoursesController < Api::V1::BaseController
       }, status: :ok
     end
   end
+
+  # PATCH /api/v1/courses/:uuid/associate_stages
+  # コースにステージを紐づけ
+  def associate_stages
+    stage_uuids = params[:stage_uuids]
+    stages = stage_uuids.map { |uuid| Stage.find_by(uuid: uuid) }
+
+    stages.map { |stage| stage.associate_course(@course) }
+
+    render json: {
+      ok: true,
+      response_id: @response_id,
+    }, status: :ok
+  end
+
 
   # DELETE /api/v1/courses/:uuid
   # コースを論理削除
