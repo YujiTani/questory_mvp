@@ -3,7 +3,7 @@ class Course < ApplicationRecord
   #
   # id           :bigint           not null, primary key
   # uuid         :uuid             not null
-  # quest_id     :bigint           not null
+  # quest_id     :bigint           null: true
   # name         :string(255)
   # description  :text(65535)
   # difficulty   :integer          default(0), not null
@@ -17,13 +17,16 @@ class Course < ApplicationRecord
   # index_courses_on_uuid
   #
   # foreign_key: :quest_id
-  #
-  belongs_to :quest
+
+  # optional: true 外部キーがnilでもエラーにしない
+  belongs_to :quest, optional: true
 
   # バリデーション前にデフォルト値を設定する
   before_validation :set_default_values, on: :create
 
   validates :uuid, presence: true, uniqueness: true
+  # quest_idがnilでない場合、questが存在しなければならない
+  validates :quest, presence: true, if: :quest_id?
   validates :name, length: { maximum: 60 }, allow_nil: true
   validates :description, length: { maximum: 1000 }, allow_nil: true
   validates :difficulty, presence: true, inclusion: { in: 0..2 }
