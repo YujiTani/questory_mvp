@@ -36,5 +36,4 @@ RSpec.describe Api::V1::QuestCoursesController, type: :controller do
       end
     end
   end
-
 end
