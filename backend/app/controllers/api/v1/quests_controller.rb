@@ -10,12 +10,11 @@ class Api::V1::QuestsController < Api::V1::BaseController
 
     # limit, offsetを使って、questsを絞り込む
     @quests = all_quests.limit(limit).offset(offset)
-    serialized_quests = @quests.map { |quest| QuestSerializer.new(quest) }
 
     render json: {
       ok: true,
       response_id: @response_id,
-      quests: serialized_quests,
+      quests: @quests,
       total: all_quests.count,
       limit: limit,
       offset: offset,
@@ -31,7 +30,7 @@ class Api::V1::QuestsController < Api::V1::BaseController
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: QuestSerializer.new(@quest)
+        quest: @quest,
       }, status: :ok
     end
   end
@@ -43,7 +42,7 @@ class Api::V1::QuestsController < Api::V1::BaseController
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: QuestSerializer.new(@quest)
+        quest: @quest,
       }, status: :ok
     end
   end
@@ -66,7 +65,7 @@ class Api::V1::QuestsController < Api::V1::BaseController
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: QuestSerializer.new(@quest)
+        quest: @quest,
       }, status: :ok
     end
   end
