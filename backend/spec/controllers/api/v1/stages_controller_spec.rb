@@ -6,6 +6,7 @@ RSpec.describe Api::V1::StagesController, type: :controller do
   let!(:valid_attributes) { { prefix: "ST1", overview: "これはテストです", target: "初心者用" } }
   let!(:invalid_attributes) { { prefix: "a" * 6, overview: "a" * 256, target: "a" * 256} }
   let!(:update_attributes) { { prefix: "ST2", overview: "サンプルです", target: "初級者用" } }
+  let!(:stage) { create(:stage) }
 
   describe "ステージを作成" do
     before { request.headers.merge!(basic_auth_headers) }
@@ -35,7 +36,6 @@ RSpec.describe Api::V1::StagesController, type: :controller do
     before { request.headers.merge!(basic_auth_headers) }
 
     context "正常系" do
-      stage = create(:stage)
 
       it "有効なパラメータでステージを更新できること" do
         patch :update, params: { uuid: stage.uuid, stage: update_attributes }, as: :json
@@ -74,7 +74,7 @@ RSpec.describe Api::V1::StagesController, type: :controller do
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
         expect(json['ok']).to be_truthy
-        expect(json['stage']['state']).to eq(1)
+        expect(json['stage']['state']).to eq('published')
       end
 
       it "ステージのfailed_caseを更新できること" do
@@ -102,6 +102,74 @@ RSpec.describe Api::V1::StagesController, type: :controller do
         expect(json['ok']).to be_falsey
         expect(json['errors']).to be_present
       end
+
+      it "存在しないuuidを指定した場合、エラーが返されること" do
+        patch :update, params: { uuid: "non_existent_uuid", stage: :update_attributes }, as: :json
+        expect(response).to have_http_status(:not_found)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_falsey
+        expect(json['message']).to be_present
+      end
+    end
   end
+
+  describe "ステージを削除" do
+    before { request.headers.merge!(basic_auth_headers) }
+
+    context "正常系" do
+      it "有効なuuidを指定した場合、ステージを論理削除できること" do
+        delete :destroy, params: { uuid: stage.uuid }
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_truthy
+      end
+
+      it "論理削除から復元" do
+        stage = create(:stage, deleted_at: Time.now)
+
+        put :restore, params: { uuid: stage.uuid }, as: :json
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_truthy
+        expect(json['stage']['deleted_at']).to be_nil
+      end
+
+      context "論理削除されたステージを完全削除" do
+        it "有効なuuidを指定した場合、ステージを完全削除できること" do
+          stage = create(:stage, deleted_at: Time.now)
+
+          delete :trashed, params: { uuid: stage.uuid }, as: :json
+          expect(response).to have_http_status(:ok)
+          json = JSON.parse(response.body)
+          expect(json['ok']).to be_truthy
+        end
+      end
+    end
+
+    context "異常系" do
+      it "存在しないuuidを指定した場合、エラーが返されること" do
+        delete :destroy, params: { uuid: "non_existent_uuid" }
+        expect(response).to have_http_status(:not_found)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_falsey
+        expect(json['message']).to be_present
+      end
+
+      it "存在しないuuidのステージを復元しようとした場合、エラーが返されること" do
+        delete :destroy, params: { uuid: "non_existent_uuid" }
+        expect(response).to have_http_status(:not_found)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_falsey
+        expect(json['message']).to be_present
+      end
+
+      it "存在しないuuidのステージを完全削除を実行しようとした場合、エラーが返されること" do
+        delete :trashed, params: { uuid: "non_existent_uuid" }, as: :json
+        expect(response).to have_http_status(:not_found)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_falsey
+        expect(json['message']).to be_present
+      end
+    end
   end
 end
