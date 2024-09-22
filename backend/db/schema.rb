@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_22_014133) do
+ActiveRecord::Schema[7.2].define(version: 2024_09_22_135111) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -99,6 +99,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_22_014133) do
     t.integer "complete_case", default: 0, null: false
     t.datetime "deleted_at"
     t.index ["course_id"], name: "index_stages_on_course_id"
+    t.index ["prefix"], name: "index_stages_on_prefix", unique: true
     t.index ["state"], name: "index_stages_on_state"
     t.index ["uuid"], name: "index_stages_on_uuid", unique: true
   end
@@ -151,7 +152,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_22_014133) do
     t.index ["question_id"], name: "index_words_on_question_id"
   end
 
-  # on_delete: :nullify 外部キーが削除された場合にnullを設定する
   add_foreign_key "courses", "quests", on_delete: :nullify
   add_foreign_key "false_answers", "questions", on_delete: :nullify
   add_foreign_key "feedback_issues", "user_feedbacks"
