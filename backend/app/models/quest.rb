@@ -18,11 +18,7 @@ class Quest < ApplicationRecord
   #
   has_many :courses
 
-  enum state: {
-    draft: 0,
-    published: 1,
-    archived: 2,
-  }
+  enum :state, { draft: 0, published: 1, archived: 2 }
 
   # バリデーション前にデフォルト値を設定する
   before_validation :set_default_values, on: :create
