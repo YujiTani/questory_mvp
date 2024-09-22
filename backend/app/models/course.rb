@@ -20,6 +20,7 @@ class Course < ApplicationRecord
 
   # optional: true 外部キーがnilでもエラーにしない
   belongs_to :quest, optional: true
+  has_many :stages, dependent: :nullify
 
   # バリデーション前にデフォルト値を設定する
   before_validation :set_default_values, on: :create
