@@ -70,7 +70,6 @@ class Api::V1::CoursesController < Api::V1::BaseController
       render json: {
         ok: false,
         response_id: @response_id,
-        code: "NotFound",
         message: "コースが見つかりませんでした",
       }, status: :not_found
     end

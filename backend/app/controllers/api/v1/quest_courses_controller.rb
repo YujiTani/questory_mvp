@@ -16,20 +16,13 @@ class Api::V1::QuestCoursesController < Api::V1::BaseController
       limit: limit,
       offset: offset,
     }, status: :ok
-  end
 
-  # PATCH /api/v1/quests/:quest_uuid/courses/:uuid
-  # 指定クエストにコースを紐付ける
-  def update
-    course_uuids = params[:course_uuids]
-    courses = course_uuids.map { |uuid| Course.find_by(uuid: uuid) }
-
-    courses.map { |course| course.associate_quest(quest) }
-
+  rescue => e
     render json: {
-      ok: true,
+      ok: false,
       response_id: @response_id,
-    }, status: :ok
+      error: e.message,
+    }, status: :not_found
   end
 
   # DELETE /api/v1/quests/:quest_uuid/courses/:uuid
