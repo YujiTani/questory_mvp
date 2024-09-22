@@ -7,12 +7,11 @@ class Api::V1::QuestCoursesController < Api::V1::BaseController
     limit = params[:limit] || 50
     offset = params[:offset] || 0
     @courses = all_courses.limit(limit).offset(offset)
-    serialized_courses = @courses.map { |course| CourseSerializer.new(course) }
 
     render json: {
       ok: true,
       response_id: @response_id,
-      courses: serialized_courses,
+      courses: @courses,
       total: all_courses.count,
       limit: limit,
       offset: offset,
