@@ -222,7 +222,6 @@ RSpec.describe Api::V1::QuestsController, type: :controller do
     context "正常系" do
       it "指定のクエストにコースが紐づくこと" do
         patch :associate_courses, params: { uuid: quest.uuid, course_uuids: [course1.uuid] }
-        pp 'params', params
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
         expect(json['ok']).to be_truthy
@@ -231,7 +230,6 @@ RSpec.describe Api::V1::QuestsController, type: :controller do
       it "指定のクエストに2つのコースが紐づくこと" do
         patch :associate_courses, params: { uuid: quest.uuid, course_uuids: [course1.uuid, course2.uuid] }
         expect(response).to have_http_status(:ok)
-        pp response.body
         json = JSON.parse(response.body)
         expect(json['ok']).to be_truthy
       end
@@ -243,7 +241,7 @@ RSpec.describe Api::V1::QuestsController, type: :controller do
         expect(response).to have_http_status(:not_found)
         json = JSON.parse(response.body)
         expect(json['ok']).to be_falsey
-        expect(json['error']).to be_present
+        expect(json['message']).to be_present
       end
     end
   end

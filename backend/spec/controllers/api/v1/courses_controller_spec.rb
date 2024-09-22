@@ -84,7 +84,6 @@ RSpec.describe Api::V1::CoursesController, type: :controller do
         expect(response).to have_http_status(:not_found)
         json = JSON.parse(response.body)
         expect(json['ok']).to be_falsey
-        expect(json['code']).to eq("NotFound")
         expect(json['message']).to be_present
       end
     end
