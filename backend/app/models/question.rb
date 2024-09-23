@@ -19,7 +19,7 @@ class Question < ApplicationRecord
   #
   # foreign_key: :stage_id
 
-  enum category: { sql: 0, activerecord: 1, rails: 2}
+  enum category: { choice: 0, multiple: 1, assembly: 2 }
 
   belongs_to :stage, optional: true
 
@@ -49,6 +49,11 @@ class Question < ApplicationRecord
     update!(stage: nil)
   end
 
+  # TODO: categoryによって、処理方法を変える
+  # まずは選択式から実装する
+  # choice multiple は falseAnswer と紐づける
+  # assembly は word と紐づける
+
   scope :without_deleted, -> { where(deleted_at: nil) }
   scope :with_deleted, -> { unscope(where: :deleted_at) }
   scope :only_deleted, -> { with_deleted.where.not(deleted_at: nil) }
@@ -57,7 +62,7 @@ class Question < ApplicationRecord
 
   def set_default_values
     self.uuid = SecureRandom.uuid
-    self.category ||=  0
+    self.category ||= 0
   end
 
 end
