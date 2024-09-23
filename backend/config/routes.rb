@@ -26,8 +26,9 @@ Rails.application.routes.draw do
         member do
           delete :trashed
           put :restore
+          patch :associate_questions
         end
-        resources :questions, param: :uuid, only: %i[index update destroy]
+        resources :questions, controller: 'stage_questions', param: :uuid, only: %i[index update destroy]
       end
 
       resources :questions, param: :uuid, except: %i[new index show] do
