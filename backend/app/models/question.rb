@@ -7,7 +7,7 @@ class Question < ApplicationRecord
   # title        :string(255)      not null
   # body         :string(255)      not null
   # answer       :string(255)      not null
-  # category     :integer
+  # category     :integer          not null
   # explanation  :text(65535)
   # created_at   :datetime         not null
   # updated_at   :datetime         not null
@@ -19,7 +19,7 @@ class Question < ApplicationRecord
   #
   # foreign_key: :stage_id
 
-  enum category: { choice: 0, multiple: 1, assembly: 2 }
+  enum category: [:choice, :multiple, :assembly]
 
   belongs_to :stage, optional: true
 
@@ -34,18 +34,20 @@ class Question < ApplicationRecord
   validates :explanation, length: { maximum: 1000 }
 
   def soft_delete
-    update(deleted_at: Time.current)
+    update!(deleted_at: Time.current)
   end
 
   def restore
-    update(deleted_at: nil)
+    update!(deleted_at: nil)
   end
 
-  def associate_question(stage)
+  # ステージに紐づける
+  def associate_stage(stage)
     update!(stage: stage)
   end
 
-  def unassociate_question
+  # ステージの紐づけを解除
+  def unassociate_stage
     update!(stage: nil)
   end
 
@@ -62,7 +64,7 @@ class Question < ApplicationRecord
 
   def set_default_values
     self.uuid = SecureRandom.uuid
-    self.category ||= 0
+    self.category ||= :choice
   end
 
 end

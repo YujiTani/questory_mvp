@@ -1,5 +1,5 @@
 class Api::V1::StagesController < Api::V1::BaseController
-  before_action :set_stage_by_uuid, only: [:update, :destroy, :restore, :trashed]
+  before_action :set_stage_by_uuid, only: [:update, :associate_questions, :destroy, :restore, :trashed]
 
   # POST /api/v1/stages
   # ステージを作成
@@ -25,6 +25,20 @@ class Api::V1::StagesController < Api::V1::BaseController
         stage: @stage
       }, status: :ok
     end
+  end
+
+  # PATCH /api/v1/stages/:uuid/associate_questions
+  # ステージに問題を紐づけ
+  def associate_questions
+    question_uuids = params[:question_uuids]
+    questions = question_uuids.map { |uuid| Question.find_by(uuid: uuid) }
+
+    questions.map { |question| question.associate_stage(@stage) }
+
+    render json: {
+      ok: true,
+      response_id: @response_id,
+    }, status: :ok
   end
 
   # DELETE /api/v1/stages/:uuid

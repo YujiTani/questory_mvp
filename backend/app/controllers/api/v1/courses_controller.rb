@@ -41,7 +41,6 @@ class Api::V1::CoursesController < Api::V1::BaseController
     }, status: :ok
   end
 
-
   # DELETE /api/v1/courses/:uuid
   # コースを論理削除
   def destroy
