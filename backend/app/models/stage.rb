@@ -25,6 +25,7 @@ class Stage < ApplicationRecord
   enum :state, { draft: 0, published: 1, archived: 2 }
 
   belongs_to :course, optional: true
+  has_many :questions, dependent: :nullify
 
   before_validation :set_default_values, on: :create
 
