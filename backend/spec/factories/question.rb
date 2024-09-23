@@ -3,19 +3,19 @@ FactoryBot.define do
     sequence(:title) { |n| "Question #{n}" }
     body { |n| "This is a test question #{n}" }
     answer { "Good Answer" }
-    category { 0 }
     explanation { "正解の解説" }
+    category { :choice }
 
     trait :choice do
-      category { 0 }
+      category { :choice }
     end
 
     trait :multiple do
-      category { 1 }
+      category { :multiple }
     end
 
     trait :assembly do
-      category { 2 }
+      category { :assembly }
     end
 
     trait :deleted do

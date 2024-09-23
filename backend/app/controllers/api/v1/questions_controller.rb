@@ -1,4 +1,4 @@
-class Api::V1::QuestionController < Api::V1::BaseController
+class Api::V1::QuestionsController < Api::V1::BaseController
   before_action :set_question_by_uuid, only: [:update, :destroy, :restore, :trashed]
 
   # POST /api/v1/questions
@@ -15,7 +15,7 @@ class Api::V1::QuestionController < Api::V1::BaseController
     end
   end
 
-  # PUT /api/v1/questions/:uuid
+  # PATCH /api/v1/questions/:uuid
   # 問題を更新
   def update
     if @question.update!(question_params)
@@ -39,7 +39,7 @@ class Api::V1::QuestionController < Api::V1::BaseController
     end
   end
 
-  # DELETE /api/v1/questions/:uuid/restore
+  # PUT /api/v1/questions/:uuid/restore
   # 問題を論理削除を元に戻す
   def restore
     if @question.restore
@@ -71,12 +71,12 @@ class Api::V1::QuestionController < Api::V1::BaseController
       render json: {
         ok: false,
         response_id: @response_id,
-        error: '問題が見つかりません'
+        message: '問題が見つかりません'
       }, status: :not_found
     end
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, :answer, :category, :explanation, :category)
+    params.require(:question).permit(:title, :body, :answer, :category, :explanation)
   end
 end
