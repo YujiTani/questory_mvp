@@ -46,11 +46,13 @@ class Stage < ApplicationRecord
     update(deleted_at: nil)
   end
 
-  def associate_stage(course)
+  # コースに紐づける
+  def associate_course(course)
     update!(course: course)
   end
 
-  def unassociate_stage
+  # コースの紐づけを解除
+  def unassociate_course
     update!(course: nil)
   end
 

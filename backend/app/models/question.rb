@@ -41,11 +41,13 @@ class Question < ApplicationRecord
     update(deleted_at: nil)
   end
 
-  def associate_question(stage)
+  # ステージに紐づける
+  def associate_stage(stage)
     update!(stage: stage)
   end
 
-  def unassociate_question
+  # ステージの紐づけを解除
+  def unassociate_stage
     update!(stage: nil)
   end
 
