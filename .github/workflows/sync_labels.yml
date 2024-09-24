@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest # 最新のUbuntu環境でジョブを実行
     steps:
       - name: Checkout
-        uses: actions/checkout@v3 # リポジトリのコードをチェックアウトするアクション
+        uses: actions/checkout@v4 # リポジトリのコードをチェックアウトするアクション
       - name: List files
         run: ls -R # 全てのファイルを再帰的にリスト表示（デバッグ用途）
       - name: Sync Labels

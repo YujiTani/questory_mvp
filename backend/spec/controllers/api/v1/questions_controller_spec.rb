@@ -70,15 +70,15 @@ RSpec.describe Api::V1::QuestionsController, type: :controller do
       end
 
       # FIXME: 論理削除から復元書がうまくいかないので、修正する
-      # it "論理削除から復元" do
-      #   question.update!(deleted_at: Time.now, category: :choice)
+      it "論理削除から復元" do
+        question.update!(deleted_at: Time.now, category: :multiple)
 
-      #   put :restore, params: { uuid: question.uuid }
-      #   expect(response).to have_http_status(:ok)
-      #   json = JSON.parse(response.body)
-      #   expect(json['ok']).to be_truthy
-      #   expect(json['question']['deleted_at']).to be_nil
-      # end
+        put :restore, params: { uuid: question.uuid }
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_truthy
+        expect(json['question']['deleted_at']).to be_nil
+      end
 
       it '論理削除された問題を完全削除' do
         question = create(:question, deleted_at: Time.now)

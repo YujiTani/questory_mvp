@@ -19,7 +19,7 @@ class Question < ApplicationRecord
   #
   # foreign_key: :stage_id
 
-  enum :category, { choice: 0, multiple: 1, assembly: 2 }
+  enum category: { choice: 0, multiple: 1, assembly: 2 }
 
   belongs_to :stage, optional: true
 
@@ -29,8 +29,9 @@ class Question < ApplicationRecord
   validates :stage, presence: true, if: :stage_id?
   validates :title, presence: true, length: { maximum: 255 }
   validates :body, presence: true, length: { maximum: 255 }
+
   validates :answer, presence: true, length: { maximum: 255 }
-  validates :category, presence: true, inclusion: { in: categories.keys }
+  validates :category, presence: true, inclusion: categories.keys
   validates :explanation, length: { maximum: 1000 }
 
   def soft_delete
