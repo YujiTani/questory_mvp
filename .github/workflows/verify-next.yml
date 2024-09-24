@@ -5,7 +5,7 @@ on:
     branches-ignore:
       - main
     paths:
-      - "next/**"
+      - "frontend/**"
   workflow_dispatch:
 
 # パイプエラーが拾えるので、機械的に追加
