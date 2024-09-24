@@ -52,6 +52,9 @@ Style/SymbolArray:
 Style/WordArray:
   EnforcedStyle: brackets
 
+Style/NestedModifier:
+  Enabled: true
+
 Naming/MethodName:
   EnforcedStyle: snake_case
 

@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :stage do
     sequence(:prefix) { |n| "ST #{n}" }
-    overview { "This is a test stage overview" }
-    target { "beginner" }
+    overview { 'This is a test stage overview' }
+    target { 'beginner' }
     state { 0 }
     failed_case { 0 }
     complete_case { 0 }

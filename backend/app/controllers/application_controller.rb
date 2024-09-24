@@ -19,7 +19,7 @@ class ApplicationController < ActionController::API
   # basic認証
   def basic_auth
     authenticate_or_request_with_http_basic do |username, password|
-      username == ENV["BASIC_AUTH_USER"] && password == ENV["BASIC_AUTH_PASSWORD"]
+      username == ENV['BASIC_AUTH_USER'] && password == ENV['BASIC_AUTH_PASSWORD']
     end
   end
 
@@ -48,6 +48,6 @@ class ApplicationController < ActionController::API
   def handle_standard_error(exception)
     Rails.logger.error(exception.message)
     Rails.logger.error(exception.backtrace.join("\n"))
-    render json: { ok: false, response_id: @response_id, message: "内部サーバーエラーが発生しました。" }, status: :internal_server_error
+    render json: { ok: false, response_id: @response_id, message: '内部サーバーエラーが発生しました。' }, status: :internal_server_error
   end
 end

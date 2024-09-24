@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :course do
     sequence(:name) { |n| "Course #{n}" }
-    description { "This is a test course description" }
+    description { 'This is a test course description' }
     difficulty { 0 }
 
     trait :nomal do
