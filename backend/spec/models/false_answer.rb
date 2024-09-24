@@ -56,7 +56,9 @@ RSpec.describe FalseAnswer, type: :model do
 
     context '異常系' do
       it '存在しない問題に紐づけを行うとエラーが発生すること' do
-        expect { false_answer.associate_question('invalid_question_id') }.to raise_error ActiveRecord::AssociationTypeMismatch
+        expect do
+          false_answer.associate_question('invalid_question_id')
+        end.to raise_error ActiveRecord::AssociationTypeMismatch
       end
     end
   end
