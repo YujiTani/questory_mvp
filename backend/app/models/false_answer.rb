@@ -15,12 +15,12 @@ class FalseAnswer < ApplicationRecord
   #
   # foreign_key: :question_id
 
-  belongs_to :question
+  belongs_to :question, optional: true
 
   before_validation :set_default_values, on: :create
 
   validates :uuid, presence: true, uniqueness: true
-  validates :question, presence: true
+  validates :question, presence: true, if: :question_id?
   validates :answer, presence: true, length: { maximum: 255 }
 
   def soft_delete
@@ -30,6 +30,20 @@ class FalseAnswer < ApplicationRecord
   def restore
     update!(deleted_at: nil)
   end
+
+  # 問題に紐づける
+  def associate_question(question)
+    update!(question:)
+  end
+
+  # 問題の紐づけを解除
+  def unassociate_question
+    update!(question: nil)
+  end
+
+  scope :without_deleted, -> { where(deleted_at: nil) }
+  scope :with_deleted, -> { unscope(where: :deleted_at) }
+  scope :only_deleted, -> { with_deleted.where.not(deleted_at: nil) }
 
   private
 
