@@ -37,7 +37,7 @@ Rails.application.routes.draw do
           put :restore
           patch :associate_false_answers
         end
-        resources :false_answers, controller: 'question_false_answers', param: :uuid, only: %i[index update destroy] do
+        resources :false_answers, controller: 'question_false_answers', param: :uuid, only: %i[index update destroy]
         resources :words, param: :uuid, only: %i[index update destroy]
       end
 
@@ -54,8 +54,6 @@ Rails.application.routes.draw do
           put :restore
         end
       end
-
     end
   end
-
 end
