@@ -3,20 +3,19 @@ require 'rails_helper'
 RSpec.describe Api::V1::CourseStagesController, type: :controller do
   include LoginMacros
 
-  describe "コースに紐づくステージ一覧を取得" do
-    before { request.headers.merge!(basic_auth_headers) }
+  describe 'コースに紐づくステージ一覧を取得' do
+    before do
+      request.headers.merge!(basic_auth_headers)
+      stage1.associate_course(course)
+      stage2.associate_course(course)
+    end
 
     let!(:course) { create(:course) }
     let!(:stage1) { create(:stage) }
     let!(:stage2) { create(:stage) }
 
-    before do
-      stage1.associate_stage(course)
-      stage2.associate_stage(course)
-    end
-
-    context "正常系" do
-      it "コースに2つのステージが紐づいていること" do
+    context '正常系' do
+      it 'コースに紐づくステージ2つを取得できること' do
         get :index, params: { course_uuid: course.uuid }
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
@@ -26,8 +25,8 @@ RSpec.describe Api::V1::CourseStagesController, type: :controller do
       end
     end
 
-    context "異常系" do
-      it "コースが存在しない場合はエラーが返されること" do
+    context '異常系' do
+      it '存在しないuuidの場合はエラーが返されること' do
         get :index, params: { course_uuid: 'invalid-uuid' }
         expect(response).to have_http_status(:not_found)
         json = JSON.parse(response.body)
@@ -36,5 +35,4 @@ RSpec.describe Api::V1::CourseStagesController, type: :controller do
       end
     end
   end
-
 end

@@ -1,5 +1,4 @@
 class Api::V1::CourseStagesController < Api::V1::BaseController
-
   # GET /api/v1/courses/:course_uuid/stages
   # コースに紐づくステージ一覧を取得
   def index
@@ -13,15 +12,14 @@ class Api::V1::CourseStagesController < Api::V1::BaseController
       response_id: @response_id,
       stages: @stages,
       total: all_stages.count,
-      limit: limit,
-      offset: offset,
+      limit:,
+      offset:
     }, status: :ok
-
-  rescue => e
+  rescue StandardError => e
     render json: {
       ok: false,
       response_id: @response_id,
-      error: e.message,
+      error: e.message
     }, status: :not_found
   end
 
@@ -33,7 +31,7 @@ class Api::V1::CourseStagesController < Api::V1::BaseController
 
     render json: {
       ok: true,
-      response_id: @response_id,
+      response_id: @response_id
     }, status: :ok
   end
 end

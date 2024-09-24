@@ -44,7 +44,7 @@ class Question < ApplicationRecord
 
   # ステージに紐づける
   def associate_stage(stage)
-    update!(stage: stage)
+    update!(stage:)
   end
 
   # ステージの紐づけを解除

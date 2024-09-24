@@ -3,20 +3,19 @@ require 'rails_helper'
 RSpec.describe Api::V1::QuestCoursesController, type: :controller do
   include LoginMacros
 
-  describe "クエストに紐づくコース一覧を取得" do
-    before { request.headers.merge!(basic_auth_headers) }
+  describe 'クエストに紐づくコース一覧を取得' do
+    before do
+      request.headers.merge!(basic_auth_headers)
+      course1.associate_quest(quest)
+      course2.associate_quest(quest)
+    end
 
     let!(:quest) { create(:quest) }
     let!(:course1) { create(:course) }
     let!(:course2) { create(:course) }
 
-    before do
-      course1.associate_quest(quest)
-      course2.associate_quest(quest)
-    end
-
-    context "正常系" do
-      it "クエストに2つのコースが紐づいていること" do
+    context '正常系' do
+      it 'クエストに紐づくコース2つを取得できること' do
         get :index, params: { quest_uuid: quest.uuid }
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
@@ -26,8 +25,8 @@ RSpec.describe Api::V1::QuestCoursesController, type: :controller do
       end
     end
 
-    context "異常系" do
-      it "クエストが存在しない場合はエラーが返されること" do
+    context '異常系' do
+      it 'クエストが存在しない場合はエラーが返されること' do
         get :index, params: { quest_uuid: 'invalid-uuid' }
         expect(response).to have_http_status(:not_found)
         json = JSON.parse(response.body)

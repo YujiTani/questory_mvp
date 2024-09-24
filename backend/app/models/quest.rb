@@ -40,7 +40,7 @@ class Quest < ApplicationRecord
 
   # 取得したデータ数と総数を比較して、取得するデータが残っているかどうか判定して返す
   def self.has_more?(offset)
-    offset + self.count < Quest.all.without_deleted.count
+    offset + count < Quest.all.without_deleted.count
   end
 
   # 削除されたレコードを除外した取得
@@ -58,5 +58,4 @@ class Quest < ApplicationRecord
     self.uuid = SecureRandom.uuid
     self.state ||= 0
   end
-
 end

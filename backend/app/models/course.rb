@@ -44,7 +44,7 @@ class Course < ApplicationRecord
 
   # クエストと紐づける
   def associate_quest(quest)
-    update!(quest: quest)
+    update!(quest:)
   end
 
   # クエストとの紐づけを解除する
@@ -66,5 +66,4 @@ class Course < ApplicationRecord
     self.uuid = SecureRandom.uuid
     self.difficulty ||= 0
   end
-
 end

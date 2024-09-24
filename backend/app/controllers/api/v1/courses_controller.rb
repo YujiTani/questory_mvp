@@ -6,73 +6,73 @@ class Api::V1::CoursesController < Api::V1::BaseController
   def create
     @course = Course.new(course_params)
 
-    if @course.save!
-      render json: {
-        ok: true,
-        response_id: @response_id,
-        course: @course
-      }, status: :ok
-    end
+    return unless @course.save!
+
+    render json: {
+      ok: true,
+      response_id: @response_id,
+      course: @course
+    }, status: :ok
   end
 
   # PATCH /api/v1/courses/:uuid
   # コースを更新
   def update
-    if @course.update!(course_params)
-      render json: {
-        ok: true,
-        response_id: @response_id,
-        course: @course
-      }, status: :ok
-    end
+    return unless @course.update!(course_params)
+
+    render json: {
+      ok: true,
+      response_id: @response_id,
+      course: @course
+    }, status: :ok
   end
 
   # PATCH /api/v1/courses/:uuid/associate_stages
   # コースにステージを紐づけ
   def associate_stages
     stage_uuids = params[:stage_uuids]
-    stages = stage_uuids.map { |uuid| Stage.find_by(uuid: uuid) }
+    stages = stage_uuids.map { |uuid| Stage.find_by(uuid:) }
 
     stages.map { |stage| stage.associate_course(@course) }
 
     render json: {
       ok: true,
-      response_id: @response_id,
+      response_id: @response_id
     }, status: :ok
   end
 
   # DELETE /api/v1/courses/:uuid
   # コースを論理削除
   def destroy
-    if @course.soft_delete
-      render json: {
-        ok: true,
-        response_id: @response_id,
-      }, status: :ok
-    end
+    return unless @course.soft_delete
+
+    render json: {
+      ok: true,
+      response_id: @response_id
+    }, status: :ok
   end
 
   # DELETE /api/v1/courses/:uuid/restore
   # コースを論理削除を元に戻す
   def restore
-    if @course.restore
-      render json: {
-        ok: true,
-        response_id: @response_id,
-        course: @course
-      }, status: :ok
-    end
+    return unless @course.restore
+
+    render json: {
+      ok: true,
+      response_id: @response_id,
+      course: @course
+    }, status: :ok
   end
 
   # DELETE /api/v1/courses/:uuid/trashed
   # コースを完全削除
   def trashed
-    if @course.destroy
-      render json: {
-        ok: true,
-        response_id: @response_id,
-      }, status: :ok
-    end
+    return unless @course.destroy
+
+    render json: {
+      ok: true,
+      response_id: @response_id
+    }, status: :ok
   end
 
   private
@@ -80,13 +80,13 @@ class Api::V1::CoursesController < Api::V1::BaseController
   def set_course_by_uuid
     @course = Course.find_by(uuid: params[:uuid])
 
-    if @course.nil?
-      render json: {
-        ok: false,
-        response_id: @response_id,
-        message: "コースが見つかりませんでした",
-      }, status: :not_found
-    end
+    return unless @course.nil?
+
+    render json: {
+      ok: false,
+      response_id: @response_id,
+      message: 'コースが見つかりませんでした'
+    }, status: :not_found
   end
 
   def course_params

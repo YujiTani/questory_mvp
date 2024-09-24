@@ -48,7 +48,7 @@ class Stage < ApplicationRecord
 
   # コースに紐づける
   def associate_course(course)
-    update!(course: course)
+    update!(course:)
   end
 
   # コースの紐づけを解除

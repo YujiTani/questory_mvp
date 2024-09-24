@@ -33,13 +33,13 @@ RSpec.describe Quest, type: :model do
       it 'nameが61文字以上の場合は登録できない' do
         quest = build(:quest, name: 'a' * 61)
         expect(quest).not_to be_valid
-        expect(quest.errors.full_messages).to include("Name is too long (maximum is 60 characters)")
+        expect(quest.errors.full_messages).to include('Name is too long (maximum is 60 characters)')
       end
 
       it 'descriptionが1001文字以上の場合は登録できない' do
         quest = build(:quest, description: 'a' * 1001)
         expect(quest).not_to be_valid
-        expect(quest.errors.full_messages).to include("Description is too long (maximum is 1000 characters)")
+        expect(quest.errors.full_messages).to include('Description is too long (maximum is 1000 characters)')
       end
 
       it 'stateがdraft, published, archived以外の場合は登録できない' do

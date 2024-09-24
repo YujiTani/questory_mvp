@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :quest do
     sequence(:name) { |n| "Quest #{n}" }
-    description { "This is a test quest description" }
+    description { 'This is a test quest description' }
 
     trait :published do
       state { :published }
