@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Quest, type: :model do
-  describe 'バリデーションテスト' do
+  describe 'モデルの挙動確認' do
     context '正常系' do
       it '有効な属性で作成できること' do
         quest = build(:quest)

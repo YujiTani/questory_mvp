@@ -9,7 +9,6 @@ class ApplicationController < ActionController::API
   rescue_from ActiveRecord::RecordInvalid, with: :handle_record_invalid
   rescue_from ActiveRecord::StatementInvalid, with: :handle_statement_invalid
 
-
   # ログ追跡用のresponse_idを生成する
   def generate_response_id
     @response_id = SecureRandom.uuid

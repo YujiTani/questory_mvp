@@ -8,24 +8,27 @@ Rails.application.routes.draw do
         member do
           delete :trashed
           put :restore
+          patch :associate_courses
         end
-        resources :courses, param: :uuid, only: %i[index update destroy]
+        resources :courses, controller: 'quest_courses', param: :uuid, only: %i[index update destroy]
       end
 
       resources :courses, param: :uuid, except: %i[new index show] do
         member do
           delete :trashed
           put :restore
+          patch :associate_stages
         end
-        resources :stages, param: :uuid, only: %i[index update destroy]
+        resources :stages, controller: 'course_stages', param: :uuid, only: %i[index update destroy]
       end
 
       resources :stages, param: :uuid, except: %i[new index show] do
         member do
           delete :trashed
           put :restore
+          patch :associate_questions
         end
-        resources :questions, param: :uuid, only: %i[index update destroy]
+        resources :questions, controller: 'stage_questions', param: :uuid, only: %i[index update destroy]
       end
 
       resources :questions, param: :uuid, except: %i[new index show] do

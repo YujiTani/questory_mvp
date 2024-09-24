@@ -1,6 +1,8 @@
 class Api::V1::QuestsController < Api::V1::BaseController
-  before_action :set_quest_by_uuid, only: [:update, :destroy, :trashed, :restore, :destroy]
+  before_action :set_quest_by_uuid, only: [:update, :destroy, :trashed, :restore, :associate_courses]
 
+  # GET /api/v1/quests
+  # クエスト一覧を取得
   def index
     all_quests = Quest.all.without_deleted
     limit = params[:limit] || 50
@@ -19,6 +21,8 @@ class Api::V1::QuestsController < Api::V1::BaseController
     }, status: :ok
   end
 
+  # POST /api/v1/quests
+  # クエストを作成
   def create
     @quest = Quest.new(quest_params)
 
@@ -26,64 +30,68 @@ class Api::V1::QuestsController < Api::V1::BaseController
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: @quest
+        quest: @quest,
       }, status: :ok
     end
   end
 
-
+  # PATCH /api/v1/quests/:uuid
+  # クエストを更新
   def update
     if @quest.update!(quest_params)
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: @quest
+        quest: @quest,
       }, status: :ok
     end
   end
 
+  # PATCH /api/v1/quests/:uuid/associate_courses
+  # 指定クエストにコースを紐付ける
+  def associate_courses
+    course_uuids = params[:course_uuids]
+    courses = course_uuids.map { |uuid| Course.find_by(uuid: uuid) }
+
+    courses.map { |course| course.associate_quest(@quest) }
+
+    render json: {
+      ok: true,
+      response_id: @response_id,
+    }, status: :ok
+  end
+
+  # DELETE /api/v1/quests/:uuid
+  # クエストを論理削除
   def destroy
     if @quest.soft_delete
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: @quest
-      }
-    else
-      render json: {
-        ok: false,
-        response_id: @response_id,
-        code: "NotFound",
-        message: "エラーの詳細メッセージ",
-        errors: @quest.errors
       }
     end
   end
 
+  # DELETE /api/v1/quests/:uuid/restore
+  # クエストを論理削除を元に戻す
   def restore
-    if @quest.update!(deleted_at: nil)
+    if @quest.restore
       render json: {
         ok: true,
         response_id: @response_id,
-        quest: @quest
+        quest: @quest,
       }, status: :ok
     end
   end
 
+  # DELETE /api/v1/quests/:uuid/trashed
+  # クエストを完全削除
   def trashed
     if @quest.destroy
       render json: {
         ok: true,
         response_id: @response_id,
-      }
-    else
-      render json: {
-        ok: false,
-        response_id: @response_id,
-        code: "NotFound",
-        message: "エラーの詳細メッセージ",
-        errors: @quest.errors
-      }
+      }, status: :ok
     end
   end
 
@@ -96,7 +104,6 @@ class Api::V1::QuestsController < Api::V1::BaseController
       render json: {
         ok: false,
         response_id: @response_id,
-        code: "NotFound",
         message: "クエストが見つかりませんでした",
       }, status: :not_found
     end

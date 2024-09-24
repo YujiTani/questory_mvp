@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_15_081325) do
+ActiveRecord::Schema[7.2].define(version: 2024_09_23_030300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "courses", force: :cascade do |t|
     t.uuid "uuid", null: false
-    t.bigint "quest_id", null: false
+    t.bigint "quest_id"
     t.string "name"
     t.text "description"
     t.integer "difficulty", default: 0, null: false
@@ -29,7 +29,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_15_081325) do
   end
 
   create_table "false_answers", force: :cascade do |t|
-    t.bigint "question_id", null: false
+    t.bigint "question_id"
     t.string "answer", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -49,7 +49,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_15_081325) do
 
   create_table "questions", force: :cascade do |t|
     t.uuid "uuid", null: false
-    t.bigint "stage_id", null: false
+    t.bigint "stage_id"
     t.string "title", null: false
     t.string "answer", null: false
     t.string "category"
@@ -88,7 +88,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_15_081325) do
 
   create_table "stages", force: :cascade do |t|
     t.uuid "uuid", null: false
-    t.bigint "course_id", null: false
+    t.bigint "course_id"
     t.string "prefix", null: false
     t.string "overview"
     t.string "target"
@@ -99,6 +99,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_15_081325) do
     t.integer "complete_case", default: 0, null: false
     t.datetime "deleted_at"
     t.index ["course_id"], name: "index_stages_on_course_id"
+    t.index ["prefix"], name: "index_stages_on_prefix", unique: true
     t.index ["state"], name: "index_stages_on_state"
     t.index ["uuid"], name: "index_stages_on_uuid", unique: true
   end
@@ -140,7 +141,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_15_081325) do
   end
 
   create_table "words", force: :cascade do |t|
-    t.bigint "question_id", null: false
+    t.bigint "question_id"
     t.string "name", null: false
     t.string "synonyms"
     t.integer "order_index", null: false
@@ -151,15 +152,15 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_15_081325) do
     t.index ["question_id"], name: "index_words_on_question_id"
   end
 
-  add_foreign_key "courses", "quests"
-  add_foreign_key "false_answers", "questions"
+  add_foreign_key "courses", "quests", on_delete: :nullify
+  add_foreign_key "false_answers", "questions", on_delete: :nullify
   add_foreign_key "feedback_issues", "user_feedbacks"
-  add_foreign_key "questions", "stages"
+  add_foreign_key "questions", "stages", on_delete: :nullify
   add_foreign_key "rankings", "users"
-  add_foreign_key "stages", "courses"
+  add_foreign_key "stages", "courses", on_delete: :nullify
   add_foreign_key "user_feedbacks", "courses"
   add_foreign_key "user_feedbacks", "questions"
   add_foreign_key "user_feedbacks", "users"
   add_foreign_key "user_high_scores", "users"
-  add_foreign_key "words", "questions"
+  add_foreign_key "words", "questions", on_delete: :nullify
 end

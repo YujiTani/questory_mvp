@@ -5,7 +5,7 @@ on:
     branches-ignore:
       - main
     paths:
-      - "rails/**"
+      - "backend/**"
   workflow_dispatch:
 
 defaults:

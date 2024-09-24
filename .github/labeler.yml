@@ -6,20 +6,27 @@ environment:
   - changed-files:
       - any-glob-to-any-file: ["scripts/**/*"]
 
-"enhancement feature":
+feature:
   - head-branch: ["^feature"]
 
-"refactor fix":
+enhancement:
+  - head-branch: ["^feature"]
+
+refactor:
   - head-branch: ["^refactor"]
 
-"bug fix":
+fix:
+  - head-branch: ["^fix"]
+
+bug:
   - head-branch: ["^fix"]
 
 release:
   - head-branch: ["^release"]
 
 documentation:
-  - head-branch: ["^documentation"]
+  - changed-files:
+      - any-glob-to-any-file: ["*.md"]
 
-"breaking-change":
+breaking-change:
   - head-branch: ["^breaking-change"]
