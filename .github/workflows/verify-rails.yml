@@ -2,7 +2,7 @@ name: Verify Ruby on Rails
 
 on:
   pull_request:
-    branches-ignore:
+    branches:
       - main
     paths:
       - "backend/**"
