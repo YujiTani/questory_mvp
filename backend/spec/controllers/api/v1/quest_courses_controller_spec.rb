@@ -16,7 +16,7 @@ RSpec.describe Api::V1::QuestCoursesController, type: :controller do
     end
 
     context "正常系" do
-      it "クエストに2つのコースが紐づいていること" do
+      it "クエストに紐づくコース2つを取得できること" do
         get :index, params: { quest_uuid: quest.uuid }
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
