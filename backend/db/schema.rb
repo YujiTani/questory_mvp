@@ -52,13 +52,12 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_23_030300) do
     t.bigint "stage_id"
     t.string "title", null: false
     t.string "answer", null: false
-    t.string "category"
     t.text "explanation"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.string "body", null: false
-    t.index ["category"], name: "index_questions_on_category"
+    t.integer "category", default: 0, null: false
     t.index ["stage_id"], name: "index_questions_on_stage_id"
     t.index ["uuid"], name: "index_questions_on_uuid", unique: true
   end
