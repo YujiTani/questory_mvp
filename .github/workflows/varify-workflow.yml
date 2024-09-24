@@ -2,7 +2,7 @@ name: Verify Workflow
 
 on:
   pull_request:
-    branches-ignore:
+    branches:
       - main
     paths:
       - ".github/workflows/**"

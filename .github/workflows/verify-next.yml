@@ -2,7 +2,7 @@ name: Verify Next.js
 
 on:
   pull_request:
-    branches-ignore:
+    branches:
       - main
     paths:
       - "frontend/**"
