@@ -22,6 +22,7 @@ class Question < ApplicationRecord
   enum :category, { choice: 0, multiple: 1, assembly: 2 }
 
   belongs_to :stage, optional: true
+  has_many :false_answers, dependent: :nullify
 
   before_validation :set_default_values, on: :create
 
