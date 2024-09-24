@@ -4,9 +4,9 @@ RSpec.describe Api::V1::QuestionsController, type: :controller do
   include LoginMacros
 
   let!(:valid_attributes) { { title: "テスト用の問題", body: "これはテスト用の問題です", answer: "Good Answer", explanation: "正解の解説"} }
-  let!(:invalid_attributes) { { title: "a" * 256, body: "a" * 256, answer: "a" * 256, explanation: "a" * 1001 } }
+  let!(:invalid_attributes) { { title: "a" * 256, body: "a" * 256, answer: "a" * 256, explanation: "a" * 1001, category: :assembly } }
   let!(:update_attributes) { { title: "更新された問題", body: "更新された問題です", answer: "Update Answer", explanation: "更新された問題です", category: :multiple } }
-  let!(:question) { create(:question, :choice) }
+  let!(:question) { create(:question, category: :choice) }
 
   describe "問題を作成" do
     before { request.headers.merge!(basic_auth_headers) }
@@ -68,15 +68,15 @@ RSpec.describe Api::V1::QuestionsController, type: :controller do
       end
 
       # FIXME: 論理削除から復元書がうまくいかないので、修正する
-      # it "論理削除から復元" do
-      #   question.update!(deleted_at: Time.now, category: :choice)
+      it "論理削除から復元" do
+        question.update!(deleted_at: Time.now, category: :multiple)
 
-      #   put :restore, params: { uuid: question.uuid }
-      #   expect(response).to have_http_status(:ok)
-      #   json = JSON.parse(response.body)
-      #   expect(json['ok']).to be_truthy
-      #   expect(json['question']['deleted_at']).to be_nil
-      # end
+        put :restore, params: { uuid: question.uuid }
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json['ok']).to be_truthy
+        expect(json['question']['deleted_at']).to be_nil
+      end
 
       it "論理削除された問題を完全削除" do
         question = create(:question, deleted_at: Time.now)
