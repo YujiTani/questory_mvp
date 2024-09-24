@@ -5,7 +5,9 @@ RSpec.describe Api::V1::QuestionsController, type: :controller do
 
   let!(:valid_attributes) { { title: "テスト用の問題", body: "これはテスト用の問題です", answer: "Good Answer", explanation: "正解の解説"} }
   let!(:invalid_attributes) { { title: "a" * 256, body: "a" * 256, answer: "a" * 256, explanation: "a" * 1001 } }
-  let!(:update_attributes) { { title: "更新された問題", body: "更新された問題です", answer: "Update Answer", explanation: "更新された問題です", category: :multiple } }
+  let!(:update_attributes) do
+    { title: "更新された問題", body: "更新された問題です", answer: "Update Answer", explanation: "更新された問題です", category: :multiple }
+  end
   let!(:question) { create(:question, :choice) }
 
   describe "問題を作成" do
