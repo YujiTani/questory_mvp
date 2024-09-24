@@ -2,8 +2,8 @@ FactoryBot.define do
   factory :question do
     sequence(:title) { |n| "Question #{n}" }
     body { |n| "This is a test question #{n}" }
-    answer { "Good Answer" }
-    explanation { "正解の解説" }
+    answer { 'Good Answer' }
+    explanation { '正解の解説' }
     category { :choice }
 
     trait :choice do

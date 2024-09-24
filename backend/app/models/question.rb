@@ -19,7 +19,7 @@ class Question < ApplicationRecord
   #
   # foreign_key: :stage_id
 
-  enum category: [:choice, :multiple, :assembly]
+  enum :category, { choice: 0, multiple: 1, assembly: 2 }
 
   belongs_to :stage, optional: true
 
@@ -43,7 +43,7 @@ class Question < ApplicationRecord
 
   # ステージに紐づける
   def associate_stage(stage)
-    update!(stage: stage)
+    update!(stage:)
   end
 
   # ステージの紐づけを解除
@@ -66,5 +66,4 @@ class Question < ApplicationRecord
     self.uuid = SecureRandom.uuid
     self.category ||= :choice
   end
-
 end
