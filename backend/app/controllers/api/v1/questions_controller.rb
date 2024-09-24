@@ -27,6 +27,21 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     }, status: :ok
   end
 
+  # PATCH /api/v1/questions/:uuid/associate_false_answers
+  # 問題に誤回答を紐づけ
+  def associate_false_answers
+    false_answer_uuids = params[:false_answer_uuids]
+    false_answers = false_answer_uuids.map { |uuid| FalseAnswer.find_by(uuid:) }
+
+    false_answers.map { |false_answer| false_answer.associate_question(@question) }
+
+    render json: {
+      ok: true,
+      response_id: @response_id
+    }, status: :ok
+  end
+
+
   # DELETE /api/v1/questions/:uuid
   # 問題を論理削除
   def destroy

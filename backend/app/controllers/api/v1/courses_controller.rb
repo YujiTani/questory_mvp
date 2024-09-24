@@ -52,7 +52,7 @@ class Api::V1::CoursesController < Api::V1::BaseController
     }, status: :ok
   end
 
-  # DELETE /api/v1/courses/:uuid/restore
+  # PUT /api/v1/courses/:uuid/restore
   # コースを論理削除を元に戻す
   def restore
     return unless @course.restore

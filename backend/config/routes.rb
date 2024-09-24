@@ -35,15 +35,17 @@ Rails.application.routes.draw do
         member do
           delete :trashed
           put :restore
+          patch :associate_false_answers
         end
-        post :answer
-        resources :false_answers, param: :uuid, only: %i[create update destroy] do
-          member do
-            delete :trashed
-            put :restore
-          end
-        end
+        resources :false_answers, controller: 'question_false_answers', param: :uuid, only: %i[index update destroy] do
         resources :words, param: :uuid, only: %i[index update destroy]
+      end
+
+      resources :false_answers, param: :uuid, except: %i[new index show] do
+        member do
+          delete :trashed
+          put :restore
+        end
       end
 
       resources :words, param: :uuid, except: %i[new index show] do
