@@ -19,7 +19,7 @@ class Question < ApplicationRecord
   #
   # foreign_key: :stage_id
 
-  enum category: { choice: 0, multiple: 1, assembly: 2 }
+  enum :category, { choice: 0, multiple: 1, assembly: 2 }
 
   belongs_to :stage, optional: true
 
