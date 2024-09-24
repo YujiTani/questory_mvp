@@ -70,7 +70,7 @@ RSpec.describe Api::V1::QuestionsController, type: :controller do
       end
 
       # FIXME: 論理削除から復元書がうまくいかないので、修正する
-      it "論理削除から復元" do
+      it '論理削除から復元' do
         question.update!(deleted_at: Time.now, category: :multiple)
 
         put :restore, params: { uuid: question.uuid }
