@@ -5,9 +5,6 @@ WORKDIR /etc/nginx
 COPY nginx.conf ./
 COPY ssl ./ssl
 
-RUN ls -la
-RUN chmod 644 ssl/nginx-selfsigned.crt && chmod 600 ssl/nginx-selfsigned.key
-
 EXPOSE 80 443
 
 CMD ["nginx", "-g", "daemon off;"]
