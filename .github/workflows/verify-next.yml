@@ -46,9 +46,9 @@ jobs:
         working-directory: ./frontend
         run: npm ci
 
-      - name: Run test for changed files
+      - name: Run test
         working-directory: ./frontend
-        run: npm run test:changed
+        run: npm run test
 
       - name: Run TypeScript compiler
         working-directory: ./frontend
