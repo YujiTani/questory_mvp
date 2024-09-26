@@ -67,6 +67,8 @@ git pull git@github.com:YujiTani/questory_mvp.git
 
 ### 6. DockerHub から push したイメージを pull
 
+作業前に、本番環境の環境変数を更新する
+
 ```
 docker compose -f compose-prod.yml pull frontend or backend
 ```
@@ -107,6 +109,7 @@ openssl req -x509 -newkey rsa:2048 -days 365 -nodes -keyout nginx/ssl/server.key
 ## rubocop の設定
 
 コードチェックを行う
+
 ```
 # 最上位ディレクトリに居る想定
 
@@ -114,6 +117,7 @@ docker compose run --rm backend bundle exec rubocop --auto-correct
 ```
 
 コードの自動修正
+
 ```
 docker compose run --rm backend bundle exec rubocop -a
 ```
