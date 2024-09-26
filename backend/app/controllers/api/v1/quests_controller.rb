@@ -72,7 +72,7 @@ class Api::V1::QuestsController < Api::V1::BaseController
     }
   end
 
-  # DELETE /api/v1/quests/:uuid/restore
+  # PUT /api/v1/quests/:uuid/restore
   # クエストを論理削除を元に戻す
   def restore
     return unless @quest.restore

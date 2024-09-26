@@ -52,7 +52,7 @@ class Api::V1::StagesController < Api::V1::BaseController
     }, status: :ok
   end
 
-  # DELETE /api/v1/stages/:uuid/restore
+  # PUT /api/v1/stages/:uuid/restore
   # ステージを論理削除を元に戻す
   def restore
     return unless @stage.restore
