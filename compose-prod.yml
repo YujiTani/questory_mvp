@@ -25,9 +25,9 @@ services:
     environment:
       DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
       RAILS_ENV: production
-      # RAILS_SERVE_STATIC_FILES: 'true'
-      # RAILS_LOG_TO_STDOUT: 'true'
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      BASIC_AUTH_USER: ${BASIC_AUTH_USER}
+      BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD}
       TZ: Asia/Tokyo
     depends_on:
       db:

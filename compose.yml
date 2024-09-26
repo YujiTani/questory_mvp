@@ -27,13 +27,15 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:password@db:5432/myapp_development
       # RAILS_ENV: development
+      BASIC_AUTH_USER: ${BASIC_AUTH_USER}
+      BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD}
       TZ: Asia/Tokyo
     depends_on:
       db:
         condition: service_healthy
     tty: true
     stdin_open: true
-      
+
   frontend:
     build:
       context: ./frontend
@@ -46,9 +48,11 @@ services:
     environment:
       - NODE_ENV=development
     command: npm run dev
-      
+
   nginx:
-    build: ./nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
     ports:
       - "80:80"
       - "443:443"
