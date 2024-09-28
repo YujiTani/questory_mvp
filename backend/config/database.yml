@@ -5,6 +5,9 @@ default: &default
   username: postgres
   password: password
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  # リトライ設定
+  connection_retries: 3
+  retry_deadline: 5
 
 development:
   <<: *default
@@ -16,7 +19,7 @@ test:
 
 production:
   <<: *default
-  database: <%= ENV['DB_NAME'] %>
-  username: <%= ENV['DB_USER'] %>
-  password: <%= ENV['DB_PASSWORD'] %>
-  host: <%= ENV['DB_HOST'] %>
+  database: questory_production
+  username: yuzunosk55
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
+  # url: <%= ENV['DATABASE_URL'] %>
