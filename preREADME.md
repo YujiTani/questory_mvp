@@ -59,8 +59,8 @@ Progate、ドットインストール、Codecademy あたりが競合になる�
 | -------------- | ----------------------------------------------------------- |
 | フロントエンド | TypeScript / React / Next.js / TailwindCSS / shadch/ui / v0 |
 | バックエンド   | Ruby / Ruby on Rails / PostgreSQL                           |
-| インフラ       | Cloudflare Pages / さくら VPS / Nginx / Docker              |
-| CI/CD          | Cloudflare Pages / GitHub Actions                           |
+| インフラ       | Cloudflare / さくら VPS / Nginx / Docker                    |
+| CI/CD          | Cloudflare / GitHub Actions                                 |
 | 認証           | OAuth 2.0 / LINE / Github                                   |
 | 開発環境       | Mac Apple Silicon / Cursor / Github Copilot                 |
 
