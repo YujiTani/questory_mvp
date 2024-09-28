@@ -55,14 +55,14 @@ Progate、ドットインストール、Codecademy あたりが競合になる�
 
 ## 使用予定の技術スタック
 
-|                |                                                        |
-| -------------- | ------------------------------------------------------ |
-| フロントエンド | TypeScript / React / Next.js / TailwindCSS / shadch/ui |
-| バックエンド   | Ruby / Ruby on Rails / MySQL or PostgreSQL             |
-| インフラ       | Cloudflare Pages                                       |
-| CI/CD          | Cloudflare Pages / GitHub Actions                      |
-| 認証           | OAuth 2.0 / LINE / Github                              |
-| 開発環境       | Mac Apple Silicon / Cursor / Github Copilot            |
+|                |                                                             |
+| -------------- | ----------------------------------------------------------- |
+| フロントエンド | TypeScript / React / Next.js / TailwindCSS / shadch/ui / v0 |
+| バックエンド   | Ruby / Ruby on Rails / PostgreSQL                           |
+| インフラ       | Cloudflare Pages / さくら VPS / Nginx / Docker              |
+| CI/CD          | Cloudflare Pages / GitHub Actions                           |
+| 認証           | OAuth 2.0 / LINE / Github                                   |
+| 開発環境       | Mac Apple Silicon / Cursor / Github Copilot                 |
 
 ## 現状作ろうと思っている機能
 
