@@ -46,8 +46,11 @@ jobs:
 
       - name: Setup SSH Key
         run: |
+          mkdir -p ~/.ssh
           echo "${{ secrets.SAKURA_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          # 初回接続時に発生する警告メッセージをスキップさせる
+          ssh-keyscan https://quejourney.com >> ~/.ssh/known_hosts
 
       - name: Deploy to Sakura VPS
         run: |
