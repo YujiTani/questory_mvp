@@ -51,11 +51,8 @@ jobs:
           username: ${{ secrets.SAKURA_SSH_USERNAME }}
           key: ${{ secrets.SAKURA_SSH_PRIVATE_KEY }}
           port: ${{ secrets.SAKURA_SSH_PORT }}
+          script_stop: true
           script: |
-            # エラーが発生した場合は処理を中断
-            set -e
-            # デバッグ用にコマンドを表示
-            set -x
             cd code/questory_mvp
             docker compose -f compose-prod.yml down
             docker compose -f compose-prod.yml pull
