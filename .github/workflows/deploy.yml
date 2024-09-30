@@ -3,6 +3,7 @@ name: Deploy
 on:
   release:
     types: [created]
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -50,7 +51,10 @@ jobs:
           echo "${{ secrets.SAKURA_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           # 初回接続時に発生する警告メッセージをスキップさせる
-          ssh-keyscan https://quejourney.com >> ~/.ssh/known_hosts
+          host="quejourney.com"
+          # 既存のknown_hostsを削除
+          ssh-keygen -R $host
+          ssh-keyscan -H $host >> ~/.ssh/known_hosts
 
       - name: Deploy to Sakura VPS
         run: |
