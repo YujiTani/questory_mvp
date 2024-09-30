@@ -44,9 +44,14 @@ jobs:
         run: |
           docker compose -f compose-prod.yml push
 
+      - name: Setup SSH Key
+        run: |
+          echo "${{ secrets.SAKURA_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
       - name: Deploy to Sakura VPS
         run: |
-          ssh -i ${{ secrets.SAKURA_SSH_PRIVATE_KEY }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} <<EOF
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} <<EOF
           # エラーが発生した場合は処理を中断
           set -e
           # デバッグ用にコマンドを表示
