@@ -46,6 +46,9 @@ jobs:
 
       - name: Deploy to Sakura VPS
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         with:
           host: ${{ secrets.SAKURA_SSH_HOST }}
           username: ${{ secrets.SAKURA_SSH_USERNAME }}
