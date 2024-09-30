@@ -20,7 +20,6 @@ jobs:
       BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
       SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -45,35 +44,19 @@ jobs:
         run: |
           docker compose -f compose-prod.yml push
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-
-      - name: Setup SSH Key
-        run: |
-          echo "${{ secrets.SAKURA_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-      # 初回接続時に発生する警告メッセージをスキップさせる
-      - name: Setup known_hosts
-        run: |
-          mkdir -p ~/.ssh/known_hosts
-          host="quejourney.com"
-
-          # 既存のknown_hostsを削除
-          ssh-keygen -R $host
-          ssh-keyscan -H $host >> ~/.ssh/known_hosts
-
       - name: Deploy to Sakura VPS
-        run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} <<EOF
-          # エラーが発生した場合は処理を中断
-          set -e
-          # デバッグ用にコマンドを表示
-          set -x
-          cd code/questory_mvp
-          docker compose -f compose-prod.yml down
-          docker compose -f compose-prod.yml pull
-          docker compose -f compose-prod.yml up -d
-          EOF
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SAKURA_SSH_HOST }}
+          username: ${{ secrets.SAKURA_SSH_USERNAME }}
+          key: ${{ secrets.SAKURA_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SAKURA_SSH_PORT }}
+          script: |
+            # エラーが発生した場合は処理を中断
+            set -e
+            # デバッグ用にコマンドを表示
+            set -x
+            cd code/questory_mvp
+            docker compose -f compose-prod.yml down
+            docker compose -f compose-prod.yml pull
+            docker compose -f compose-prod.yml up -d
