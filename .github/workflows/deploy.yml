@@ -54,6 +54,7 @@ jobs:
           username: ${{ secrets.SAKURA_SSH_USERNAME }}
           key: ${{ secrets.SAKURA_SSH_PRIVATE_KEY }}
           port: ${{ secrets.SAKURA_SSH_PORT }}
+          envs: DOCKER_HUB_USERNAME, DOCKER_HUB_PASSWORD
           script_stop: true
           script: |
             cd code/questory_mvp
