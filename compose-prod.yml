@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile.dev
       platforms:
        - linux/amd64
-    image: ${DOCKER_USERNAME}/${BACKEND_REPOSITORY}:${VERSION}
+    image: ${DOCKERHUB_USERNAME}/${BACKEND_REPOSITORY}:${VERSION}
     command: bash -c "bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0 -p 3000"
     environment:
       RAILS_ENV: production
@@ -41,7 +41,7 @@ services:
       dockerfile: Dockerfile
       platforms:
        - linux/amd64
-    image: ${DOCKER_USERNAME}/${FRONTEND_REPOSITORY}:${VERSION}
+    image: ${DOCKERHUB_USERNAME}/${FRONTEND_REPOSITORY}:${VERSION}
     environment:
       NODE_ENV: production
     command: node server.js
@@ -52,7 +52,7 @@ services:
       dockerfile: Dockerfile
       platforms:
        - linux/amd64
-    image: ${DOCKER_USERNAME}/${NGINX_REPOSITORY}:${VERSION}
+    image: ${DOCKERHUB_USERNAME}/${NGINX_REPOSITORY}:${VERSION}
     ports:
       - "80:80"
       - "443:443"
