@@ -20,15 +20,10 @@ jobs:
       BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
       SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      VERSION: ${{ github.event.release.tag_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      # 引数で受け取ったバージョンを環境変数に設定
-      - name: Set version
-        run: |
-          VERSION=${{ github.event.release.tag_name }}
-          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
       - name: Build Docker image
         run: |
@@ -49,19 +44,22 @@ jobs:
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKER_HUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+          VERSION: ${{ env.VERSION }}
         with:
           host: ${{ secrets.SAKURA_SSH_HOST }}
           username: ${{ secrets.SAKURA_SSH_USERNAME }}
           key: ${{ secrets.SAKURA_SSH_PRIVATE_KEY }}
           port: ${{ secrets.SAKURA_SSH_PORT }}
-          envs: DOCKER_HUB_USERNAME, DOCKER_HUB_PASSWORD
+          envs: DOCKER_HUB_USERNAME, DOCKER_HUB_PASSWORD, VERSION
           script_stop: true
           script: |
             env
             cd code/questory_mvp
             git pull origin main
             # docker login
-            docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+            docker login -u yuzunosk55 -p ${DOCKERHUB_PASSWORD}
             docker compose -f compose-prod.yml down
-            docker compose -f compose-prod.yml pull frontend backend nginx
+            docker pull yuzunosk55/questory-mvp-frontend:${VERSION}
+            docker pull yuzunosk55/questory-mvp-backend:${VERSION}
+            docker pull yuzunosk55/questory-mvp-nginx:${VERSION}
             docker compose -f compose-prod.yml up -d
