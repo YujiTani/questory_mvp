@@ -59,6 +59,6 @@ jobs:
           script: |
             cd code/questory_mvp
             git pull origin main
-            docker compose -f compose-prod.yml down
-            docker compose -f compose-prod.yml pull
-            docker compose -f compose-prod.yml up -d
+            # docker compose -f compose-prod.yml down
+            # docker compose -f compose-prod.yml pull
+            # docker compose -f compose-prod.yml up -d
