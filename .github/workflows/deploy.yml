@@ -32,8 +32,14 @@ jobs:
 
       - name: Copy SSL certificates
         run: |
-          echo "$CLOUDFLARE_SSL_KEY" > nginx/ssl/questory.com.key
-          echo "$CLOUDFLARE_SSL_PEM" > nginx/ssl/questory.com.pem
+          printf "%s" "$CLOUDFLARE_SSL_KEY" > nginx/ssl/questory.com.key
+          printf "%s" "$CLOUDFLARE_SSL_PEM" > nginx/ssl/questory.com.pem
+
+      - name: Verify SSL certificates
+        run: |
+          ls -l nginx/ssl/
+          cat nginx/ssl/questory.com.key
+          cat nginx/ssl/questory.com.pem
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -41,20 +47,22 @@ jobs:
           username: ${{ env.DOCKERHUB_USERNAME }}
           password: ${{ env.DOCKERHUB_PASSWORD }}
 
-      - name: Build and push Docker images
-        run: |
-          docker compose -f compose-prod.yml build
-          docker compose -f compose-prod.yml push
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build Docker images
+        run: docker compose -f compose-prod.yml build
+
+      - name: Push Docker images
+        run: docker compose -f compose-prod.yml push
 
       - name: Deploy to Sakura VPS
         uses: appleboy/ssh-action@v1.0.3
-        env:
-          BACKEND_REPOSITORY: ${{ vars.BACKEND_REPOSITORY }}
-          FRONTEND_REPOSITORY: ${{ vars.FRONTEND_REPOSITORY }}
-          NGINX_REPOSITORY: ${{ vars.NGINX_REPOSITORY }}
-          DOCKERHUB_USERNAME: ${{ env.DOCKERHUB_USERNAME }}
-          DOCKERHUB_PASSWORD: ${{ env.DOCKERHUB_PASSWORD }}
-          VERSION: ${{ env.VERSION }}
         with:
           host: ${{ secrets.SAKURA_SSH_HOST }}
           username: ${{ secrets.SAKURA_SSH_USERNAME }}
@@ -63,6 +71,7 @@ jobs:
           envs: DOCKERHUB_USERNAME, DOCKERHUB_PASSWORD, VERSION, BACKEND_REPOSITORY, FRONTEND_REPOSITORY, NGINX_REPOSITORY
           script_stop: true
           script: |
+            set -e
             cd code/questory_mvp
             git pull origin main
             echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
