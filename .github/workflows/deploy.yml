@@ -57,10 +57,11 @@ jobs:
           envs: DOCKER_HUB_USERNAME, DOCKER_HUB_PASSWORD
           script_stop: true
           script: |
+            env
             cd code/questory_mvp
             git pull origin main
             # docker login
             docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
             docker compose -f compose-prod.yml down
-            docker compose -f compose-prod.yml pull
+            docker compose -f compose-prod.yml pull frontend backend nginx
             docker compose -f compose-prod.yml up -d
