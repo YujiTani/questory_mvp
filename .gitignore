@@ -22,5 +22,4 @@ docker-compose.override.yml
 .env
 
 # SSL
-/nginx/ssl/nginx-selfsigned.key
-/nginx/ssl/nginx-selfsigned.crt
+/nginx/ssl/*
