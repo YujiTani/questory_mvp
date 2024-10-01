@@ -42,22 +42,21 @@ jobs:
       - name: Deploy to Sakura VPS
         uses: appleboy/ssh-action@v1.0.3
         env:
-          DOCKER_HUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
           VERSION: ${{ env.VERSION }}
         with:
           host: ${{ secrets.SAKURA_SSH_HOST }}
           username: ${{ secrets.SAKURA_SSH_USERNAME }}
           key: ${{ secrets.SAKURA_SSH_PRIVATE_KEY }}
           port: ${{ secrets.SAKURA_SSH_PORT }}
-          envs: DOCKER_HUB_USERNAME, DOCKER_HUB_PASSWORD, VERSION
+          envs: DOCKERHUB_USERNAME, DOCKERHUB_PASSWORD, VERSION
           script_stop: true
           script: |
-            env
             cd code/questory_mvp
             git pull origin main
             # docker login
-            docker login -u yuzunosk55 -p ${DOCKERHUB_PASSWORD}
+            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
             docker compose -f compose-prod.yml down
             docker pull yuzunosk55/questory-mvp-frontend:${VERSION}
             docker pull yuzunosk55/questory-mvp-backend:${VERSION}
