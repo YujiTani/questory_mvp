@@ -9,6 +9,7 @@ gem 'puma', '>= 5.0'
 gem 'rack-cors'
 gem 'rubocop', require: false
 gem 'tzinfo-data', platforms: [:windows, :jruby]
+gem 'devise'
 
 group :development, :test do
   gem 'brakeman', require: false
