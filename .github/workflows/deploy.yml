@@ -62,7 +62,7 @@ jobs:
         run: docker compose -f compose-prod.yml push
 
       - name: Deploy to Sakura VPS
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.SAKURA_SSH_HOST }}
           username: ${{ secrets.SAKURA_SSH_USERNAME }}
