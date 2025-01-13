@@ -1,4 +1,4 @@
-class CreateQuestions < ActiveRecord::Migration[7.2]
+class CreateQuestions < ActiveRecord::Migration[7.1]
   def change
     create_table :questions do |t|
       t.uuid :uuid, null: false

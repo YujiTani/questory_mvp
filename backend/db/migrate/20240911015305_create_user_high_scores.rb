@@ -1,4 +1,4 @@
-class CreateUserHighScores < ActiveRecord::Migration[7.2]
+class CreateUserHighScores < ActiveRecord::Migration[7.1]
   def change
     create_table :user_high_scores do |t|
       t.references :user, null: false, foreign_key: true, index: { unique: true }

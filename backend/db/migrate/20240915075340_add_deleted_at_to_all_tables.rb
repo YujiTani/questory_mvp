@@ -1,4 +1,4 @@
-class AddDeletedAtToAllTables < ActiveRecord::Migration[7.2]
+class AddDeletedAtToAllTables < ActiveRecord::Migration[7.1]
   def change
     add_column :users, :deleted_at, :datetime, default: nil
     add_column :rankings, :deleted_at, :datetime, default: nil

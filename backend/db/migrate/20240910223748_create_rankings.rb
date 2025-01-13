@@ -1,4 +1,4 @@
-class CreateRankings < ActiveRecord::Migration[7.2]
+class CreateRankings < ActiveRecord::Migration[7.1]
   def change
     create_table :rankings do |t|
       t.references :user, null: false, foreign_key: true, index: true

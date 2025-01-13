@@ -1,4 +1,4 @@
-class CreateFeedbackIssues < ActiveRecord::Migration[7.2]
+class CreateFeedbackIssues < ActiveRecord::Migration[7.1]
   def change
     create_table :feedback_issues do |t|
       t.references :user_feedback, null: false, foreign_key: true, index: true
@@ -10,4 +10,3 @@ class CreateFeedbackIssues < ActiveRecord::Migration[7.2]
     add_index :feedback_issues, :issue
   end
 end
-

@@ -1,4 +1,4 @@
-class ChangeCategoryColumnForQuestion < ActiveRecord::Migration[7.2]
+class ChangeCategoryColumnForQuestion < ActiveRecord::Migration[7.1]
   def change
     reversible do |direction|
       change_table :questions do |t|

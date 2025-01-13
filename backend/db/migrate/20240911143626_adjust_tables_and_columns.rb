@@ -1,4 +1,4 @@
-class AdjustTablesAndColumns < ActiveRecord::Migration[7.2]
+class AdjustTablesAndColumns < ActiveRecord::Migration[7.1]
   def change
     # stages テーブルの修正
     add_column :stages, :complete_case, :integer, default: 0, null: false

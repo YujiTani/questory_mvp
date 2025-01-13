@@ -1,4 +1,4 @@
-class CreateStages < ActiveRecord::Migration[7.2]
+class CreateStages < ActiveRecord::Migration[7.1]
   def change
     create_table :stages do |t|
       t.uuid :uuid, null: false

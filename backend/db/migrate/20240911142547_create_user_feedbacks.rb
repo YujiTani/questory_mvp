@@ -1,4 +1,4 @@
-class CreateUserFeedbacks < ActiveRecord::Migration[7.2]
+class CreateUserFeedbacks < ActiveRecord::Migration[7.1]
   def change
     create_table :user_feedbacks do |t|
       t.references :user, null: false, foreign_key: true, index: true

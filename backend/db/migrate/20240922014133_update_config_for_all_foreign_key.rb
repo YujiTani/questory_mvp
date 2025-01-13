@@ -1,4 +1,4 @@
-class UpdateConfigForAllForeignKey < ActiveRecord::Migration[7.2]
+class UpdateConfigForAllForeignKey < ActiveRecord::Migration[7.1]
   # もしかしたら、DBの整合性が保てないかもしれないので、実行には注意する
   def change
     # coursesテーブル
